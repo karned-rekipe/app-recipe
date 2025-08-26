@@ -21,36 +21,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="image"
-        options={{
-          title: 'Image',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'image' : 'image-outline'} color={color} size={24}/>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="recipe_list"
-        options={{
-          title: 'Recettes',
+          title: 'Mes recettes',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'book' : 'book-outline'} color={color} size={24}/>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="about"
-        options={{
-          title: 'About',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24}/>
           ),
         }}
       />

@@ -1,30 +1,29 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet } from "react-native";
+import RecipeList from "../../components/RecipeList";
+import { sampleRecipes } from "../../data/sampleRecipes";
+import { Recipe } from "../../types/Recipe";
 
-export default function Index() {
+export default function RecipeListScreen() {
+  const handleRecipePress = (recipe: Recipe) => {
+    Alert.alert(
+      recipe.name,
+      `Recette ${recipe.type} de ${recipe.country}\nDifficulté: ${recipe.difficulty}/5\nTemps: ${recipe.totalTime} minutes`
+    );
+  };
+
   return (
-    <View
-      style={styles.container}
-    >
-      <Text style={styles.text}>Hello Iphone 16 !</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <RecipeList 
+        recipes={sampleRecipes}
+        onRecipePress={handleRecipePress}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#25292e",
-  },
-  link: {
-    marginTop: 20,
-    fontSize: 18,
-    color: "#1e90ff",
+    backgroundColor: "#f5f5f5",
   },
 });
