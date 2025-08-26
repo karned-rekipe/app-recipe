@@ -1,14 +1,13 @@
-import { Alert, SafeAreaView, StyleSheet } from "react-native";
+import { router } from 'expo-router';
+import { SafeAreaView, StyleSheet } from "react-native";
 import RecipeList from "../../components/RecipeList";
 import { sampleRecipes } from "../../data/sampleRecipes";
 import { Recipe } from "../../types/Recipe";
 
 export default function RecipeListScreen() {
   const handleRecipePress = (recipe: Recipe) => {
-    Alert.alert(
-      recipe.name,
-      `Recette ${recipe.type} de ${recipe.country}\nDifficulté: ${recipe.difficulty}/5\nTemps: ${recipe.totalTime} minutes`
-    );
+    // Navigation vers l'écran de détail avec l'ID de la recette
+    router.push(`/recipe-details?id=${recipe.id}`);
   };
 
   return (
