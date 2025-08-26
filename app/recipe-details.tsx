@@ -45,30 +45,27 @@ export default function RecipeDetailsScreen() {
 
       {/* Informations principales */}
       <View style={styles.content}>
-        <View style={styles.titleSection}>
-          <Text style={styles.recipeName}>{recipe.name}</Text>
-          <Text style={styles.countryFlag}>{recipe.countryFlag}</Text>
-        </View>
-        
-        <Text style={styles.country}>{recipe.country}</Text>
-        
-        <View style={styles.badgeContainer}>
-          <View style={[styles.badge, getTypeBadgeStyle(recipe.type)]}>
-            <Text style={styles.badgeText}>{recipe.type}</Text>
-          </View>
-        </View>
 
         {/* Informations détaillées */}
         <View style={styles.detailsContainer}>
-          <View style={styles.detailItem}>
-            <Ionicons name="time-outline" size={20} color="#666" />
-            <Text style={styles.detailText}>{recipe.totalTime} minutes</Text>
+            <View style={styles.detailItem}>
+                <View style={[styles.badge, getTypeBadgeStyle(recipe.type)]}>
+                <Text style={styles.badgeText}>{recipe.type}</Text>
+            </View>
+            <View style={styles.detailItem}>
+                <Ionicons name="time-outline" size={20} color="#666" />
+                <Text style={styles.detailText}>{recipe.totalTime} minutes</Text>
+            </View>
+            <View style={styles.detailItem}>
+                <Text style={styles.detailText}>{getDifficultyStars(recipe.difficulty)}</Text>
+            </View>
           </View>
-          
-          <View style={styles.detailItem}>
-            <Text style={styles.detailIcon}>👨‍🍳</Text>
-            <Text style={styles.detailText}>Difficulté: {getDifficultyStars(recipe.difficulty)}</Text>
-          </View>
+        </View>
+
+
+        <View style={styles.titleSection}>
+          <Text style={styles.recipeName}>{recipe.name}</Text>
+          <Text style={styles.countryFlag}>{recipe.countryFlag}</Text>
         </View>
 
         {/* Section à développer plus tard */}
@@ -113,8 +110,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 60, // Pour tenir compte du status bar
-    right: 16,
+    top: 10, // Pour tenir compte du status bar
+    right: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,
     padding: 8,
@@ -122,8 +119,8 @@ const styles = StyleSheet.create({
   },
   closeButtonNoImage: {
     position: 'absolute',
-    top: 60, // Pour tenir compte du status bar
-    right: 16,
+    top: 10, // Pour tenir compte du status bar
+    right: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 20,
     padding: 8,
@@ -184,12 +181,13 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   detailsContainer: {
-    marginBottom: 30,
+    
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
+    justifyContent: 'space-between',
   },
   detailIcon: {
     fontSize: 20,
