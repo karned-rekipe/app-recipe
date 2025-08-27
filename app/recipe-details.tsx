@@ -22,7 +22,7 @@ export default function RecipeDetailsScreen() {
   }
 
   const getDifficultyStars = (difficulty: number) => {
-    return '👨‍🍳'.repeat(difficulty) + '👨‍🍳'.repeat(3 - difficulty).replace(/👨‍🍳/g, '⚪');
+    return '👨‍🍳'.repeat(difficulty);
   };
 
   return (
@@ -72,6 +72,12 @@ export default function RecipeDetailsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ingrédients</Text>
           <Text style={styles.placeholderText}>Les ingrédients seront ajoutés prochainement...</Text>
+        </View>
+
+        {/* Section à développer plus tard */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Ustensiles</Text>
+          <Text style={styles.placeholderText}>Les ustensiles seront ajoutés prochainement...</Text>
         </View>
 
         <View style={styles.section}>
