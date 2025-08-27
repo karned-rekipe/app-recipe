@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Recipe } from '../types/Recipe';
+import { RecipeMetadata } from './RecipeMetadata';
 
 type Props = {
   recipe: Recipe;
@@ -8,32 +9,6 @@ type Props = {
 };
 
 export default function RecipeCard({ recipe, onPress }: Props) {
-  const formatTime = (minutes: number): string => {
-    if (minutes < 60) {
-      return `${minutes}min`;
-    }
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0 ? `${hours}h${remainingMinutes}min` : `${hours}h`;
-  };
-
-  const renderDifficulty = (difficulty: number): string => {
-    return '👨‍🍳'.repeat(difficulty);
-  };
-
-  const getTypeColor = (type: string): string => {
-    switch (type) {
-      case 'entrée':
-        return '#4CAF50'; // Vert
-      case 'plat':
-        return '#FF9800'; // Orange
-      case 'dessert':
-        return '#E91E63'; // Rose
-      default:
-        return '#757575'; // Gris
-    }
-  };
-
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [
       styles.container,
@@ -55,14 +30,11 @@ export default function RecipeCard({ recipe, onPress }: Props) {
           <Text style={styles.countryFlag}>{recipe.countryFlag}</Text>
         </View>
         
-        <View style={[styles.typeTag, { backgroundColor: getTypeColor(recipe.type) }]}>
-          <Text style={styles.typeText}>{recipe.type.toUpperCase()}</Text>
-        </View>
-        
-        <View style={styles.infoRow}>
-          <Text style={styles.difficultyText}>{renderDifficulty(recipe.difficulty)}</Text>
-          <Text style={styles.timeText}>{formatTime(recipe.totalTime)}</Text>
-        </View>
+        <RecipeMetadata 
+          recipe={recipe} 
+          variant="card" 
+          layout="horizontal" 
+        />
       </View>
     </Pressable>
   );
@@ -127,31 +99,6 @@ const styles = StyleSheet.create({
   },
   countryFlag: {
     fontSize: 16,
-  },
-  typeTag: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  typeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  difficultyText: {
-    fontSize: 14,
-  },
-  timeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#666',
   },
   pressed: {
     opacity: 0.7,
