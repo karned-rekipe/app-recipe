@@ -26,8 +26,10 @@ export const RecipeMetadata: React.FC<RecipeMetadataProps> = ({
       <View style={styles.horizontalContainer}>
         <TypeBadge type={recipe.type} />
         <View style={styles.horizontalInfo}>
-          <DifficultyStars difficulty={recipe.difficulty} size={size} />
           <TimeDisplay minutes={recipe.totalTime} variant={timeVariant} size={size} />
+        </View>
+        <View style={styles.horizontalInfo}>
+          <DifficultyStars difficulty={recipe.difficulty} size={size} />
         </View>
       </View>
     );
@@ -37,8 +39,8 @@ export const RecipeMetadata: React.FC<RecipeMetadataProps> = ({
     <View style={styles.verticalContainer}>
       <TypeBadge type={recipe.type} />
       <View style={styles.infoRow}>
-        <DifficultyStars difficulty={recipe.difficulty} size={size} />
         <TimeDisplay minutes={recipe.totalTime} variant={timeVariant} size={size} />
+        <DifficultyStars difficulty={recipe.difficulty} size={size} />
       </View>
     </View>
   );
