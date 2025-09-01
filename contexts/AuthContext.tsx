@@ -5,7 +5,9 @@
 
 import React, { createContext, useContext, useReducer, useEffect, type PropsWithChildren } from 'react';
 import type { AuthContextType, AuthState, LoginCredentials, AuthTokens, AuthError } from '../types/Auth';
+import type { License } from '../types/License';
 import { authApiService } from '../services/AuthApiService';
+import { licenseApiService } from '../services/LicenseApiService';
 import { secureStorageService } from '../services/SecureStorageService';
 
 // État initial
@@ -14,6 +16,8 @@ const initialState: AuthState = {
   isLoading: true,
   user: null,
   tokens: null,
+  licenses: [],
+  activeLicense: null,
   error: null,
 };
 
@@ -21,6 +25,8 @@ const initialState: AuthState = {
 type AuthAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_AUTHENTICATED'; payload: { tokens: AuthTokens; user?: any } }
+  | { type: 'SET_LICENSES'; payload: License[] }
+  | { type: 'SET_ACTIVE_LICENSE'; payload: License | null }
   | { type: 'SET_ERROR'; payload: AuthError }
   | { type: 'CLEAR_ERROR' }
   | { type: 'LOGOUT' }
@@ -40,6 +46,26 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         tokens: action.payload.tokens,
         user: action.payload.user || null,
         error: null,
+      };
+    
+    case 'SET_LICENSES':
+      return {
+        ...state,
+        licenses: action.payload,
+        // Si aucune licence active et qu'on en a au moins une, prendre la première licence recipe
+        activeLicense: state.activeLicense || 
+          action.payload.find(license => 
+            license.api_roles['api-recipe'] && 
+            license.api_roles['api-recipe'].roles.length > 0 &&
+            license.exp > Math.floor(Date.now() / 1000)
+          ) || 
+          null,
+      };
+    
+    case 'SET_ACTIVE_LICENSE':
+      return {
+        ...state,
+        activeLicense: action.payload,
       };
     
     case 'SET_ERROR':
@@ -107,6 +133,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
           user 
         } 
       });
+
+      // Récupérer les licences de l'utilisateur
+      try {
+        const licenses = await licenseApiService.getUserLicenses(authResponse.tokens.access_token);
+        dispatch({ type: 'SET_LICENSES', payload: licenses });
+      } catch (error) {
+        console.warn('Impossible de récupérer les licences:', error);
+        // Les licences ne sont pas critiques pour la connexion, continuer sans
+      }
     } catch (error: any) {
       const authError: AuthError = {
         code: error.code || 'UNKNOWN_ERROR',
@@ -163,6 +198,27 @@ export function AuthProvider({ children }: PropsWithChildren) {
     dispatch({ type: 'CLEAR_ERROR' });
   };
 
+  // Fonction pour rafraîchir les licences
+  const refreshLicenses = async (): Promise<void> => {
+    if (!state.tokens?.access_token) {
+      console.warn('Aucun token d\'accès disponible pour rafraîchir les licences');
+      return;
+    }
+
+    try {
+      const licenses = await licenseApiService.getUserLicenses(state.tokens.access_token);
+      dispatch({ type: 'SET_LICENSES', payload: licenses });
+    } catch (error) {
+      console.error('Erreur lors du rafraîchissement des licences:', error);
+      // Ne pas lever d'erreur car les licences ne sont pas critiques
+    }
+  };
+
+  // Fonction pour définir la licence active
+  const setActiveLicense = (license: License): void => {
+    dispatch({ type: 'SET_ACTIVE_LICENSE', payload: license });
+  };
+
   // Vérifier l'authentification au démarrage
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -174,8 +230,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
           return;
         }
 
-        // Vérifier si le token a expiré
-        const isExpired = await secureStorageService.isTokenExpired();
+        // Vérifier si le token a expiré (logique simplifiée pour le token JWT)
+        const isTokenExpired = (token: string): boolean => {
+          try {
+            // Décoder le payload du JWT (partie du milieu)
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Math.floor(Date.now() / 1000);
+            return payload.exp < currentTime;
+          } catch (error) {
+            // Si on ne peut pas décoder le token, le considérer comme expiré
+            return true;
+          }
+        };
+
+        const isExpired = isTokenExpired(storedTokens.access_token);
         
         if (isExpired && storedTokens.refresh_token) {
           // Essayer de rafraîchir le token
@@ -198,6 +266,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 user 
               } 
             });
+
+            // Récupérer les licences avec le nouveau token
+            try {
+              const licenses = await licenseApiService.getUserLicenses(newTokens.access_token);
+              dispatch({ type: 'SET_LICENSES', payload: licenses });
+            } catch (error) {
+              console.warn('Impossible de récupérer les licences:', error);
+            }
           } catch (error) {
             // Échec du refresh, supprimer les tokens
             await secureStorageService.clearTokens();
@@ -219,6 +295,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
               user 
             } 
           });
+
+          // Récupérer les licences avec le token existant
+          try {
+            const licenses = await licenseApiService.getUserLicenses(storedTokens.access_token);
+            dispatch({ type: 'SET_LICENSES', payload: licenses });
+          } catch (error) {
+            console.warn('Impossible de récupérer les licences:', error);
+          }
         } else {
           // Token expiré et pas de refresh token
           await secureStorageService.clearTokens();
@@ -238,6 +322,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     signIn,
     signOut,
     refreshTokens,
+    refreshLicenses,
+    setActiveLicense,
     clearError,
   };
 

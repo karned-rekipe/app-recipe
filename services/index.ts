@@ -3,4 +3,6 @@
  */
 
 export { AuthApiService, authApiService } from './AuthApiService';
-export { SecureStorageService, secureStorageService } from './SecureStorageService';
+export { LicenseApiService, licenseApiService } from './LicenseApiService';
+export { authenticatedApiService } from './AuthenticatedApiService';
+export { secureStorageService } from './SecureStorageService';

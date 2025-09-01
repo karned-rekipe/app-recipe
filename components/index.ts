@@ -4,6 +4,7 @@ export { DetailItem } from './DetailItem';
 export { DifficultyStars } from './DifficultyStars';
 export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
+export { LicenseInfo } from './LicenseInfo';
 export { LoginBackground } from './LoginBackground';
 export { PlaceholderText } from './PlaceholderText';
 export { RecipeDetails } from './RecipeDetails';

@@ -1,5 +1,6 @@
-import { SafeAreaView, StyleSheet, View, Text, Alert } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Alert, ScrollView } from "react-native";
 import { AuthButton } from "../../components/auth/AuthButton";
+import { LicenseInfo } from "../../components/LicenseInfo";
 import { useAuth } from "../../contexts/AuthContext";
 import { router } from "expo-router";
 
@@ -29,14 +30,14 @@ export default function UserScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
         <View style={styles.header}>
           <Text style={styles.title}>Mon Profil</Text>
+          <Text style={styles.welcome}>Bonjour {user?.username || 'Utilisateur'} !</Text>
         </View>
         
-        <View style={styles.userInfo}>
-          <Text style={styles.welcome}>Bonjour {user?.username || 'Utilisateur'} !</Text>
-          <Text style={styles.subtitle}>Informations du profil à venir...</Text>
+        <View style={styles.licenseSection}>
+          <LicenseInfo />
         </View>
 
         <View style={styles.actions}>
@@ -46,7 +47,7 @@ export default function UserScreen() {
             variant="secondary"
           />
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -58,37 +59,31 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  contentContainer: {
     padding: 20,
+    paddingBottom: 40,
   },
   header: {
-    marginBottom: 30,
+    marginBottom: 24,
+    alignItems: 'center',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
-    textAlign: 'center',
-  },
-  userInfo: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 8,
   },
   welcome: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '500',
     color: '#666',
-    textAlign: 'center',
-    fontStyle: 'italic',
+  },
+  licenseSection: {
+    flex: 1,
+    marginBottom: 24,
   },
   actions: {
-    paddingBottom: 20,
+    paddingTop: 20,
   },
 });

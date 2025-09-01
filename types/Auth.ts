@@ -2,6 +2,8 @@
  * Types pour l'authentification
  */
 
+import type { License } from './License';
+
 export interface LoginCredentials {
   username: string;
   password: string;
@@ -36,6 +38,8 @@ export interface AuthState {
   isLoading: boolean;
   user: User | null;
   tokens: AuthTokens | null;
+  licenses: License[];
+  activeLicense: License | null;
   error: AuthError | null;
 }
 
@@ -43,5 +47,7 @@ export interface AuthContextType extends AuthState {
   signIn: (credentials: LoginCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   refreshTokens: () => Promise<void>;
+  refreshLicenses: () => Promise<void>;
+  setActiveLicense: (license: License) => void;
   clearError: () => void;
 }
