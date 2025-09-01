@@ -49,20 +49,48 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       };
     
     case 'SET_LICENSES':
+      console.log('🏷️  [AuthContext] Réception des licences:', {
+        totalLicenses: action.payload.length,
+        licenses: action.payload.map(l => ({
+          uuid: l.uuid.substring(0, 8) + '...',
+          name: l.name,
+          expired: l.exp <= Math.floor(Date.now() / 1000)
+        }))
+      });
+      
+      // Sélection simple : première licence valide (temporaire pour diagnostic)
+      const currentTime = Math.floor(Date.now() / 1000);
+      const validLicense = action.payload.find(license => 
+        license.exp > currentTime &&
+        license.api_roles['api-recipe'] && 
+        license.api_roles['api-recipe'].roles.length > 0
+      );
+      
+      const selectedLicense = state.activeLicense || validLicense || null;
+      
+      console.log('🎯 [AuthContext] Licence sélectionnée:', selectedLicense ? {
+        uuid: selectedLicense.uuid.substring(0, 8) + '...',
+        name: selectedLicense.name
+      } : 'Aucune');
+      
       return {
         ...state,
         licenses: action.payload,
-        // Si aucune licence active et qu'on en a au moins une, prendre la première licence recipe
-        activeLicense: state.activeLicense || 
-          action.payload.find(license => 
-            license.api_roles['api-recipe'] && 
-            license.api_roles['api-recipe'].roles.length > 0 &&
-            license.exp > Math.floor(Date.now() / 1000)
-          ) || 
-          null,
+        activeLicense: selectedLicense,
       };
     
     case 'SET_ACTIVE_LICENSE':
+      console.log('🎯 [AuthContext] Changement de licence active:', {
+        oldLicense: state.activeLicense ? {
+          uuid: state.activeLicense.uuid.substring(0, 8) + '...',
+          name: state.activeLicense.name
+        } : null,
+        newLicense: action.payload ? {
+          uuid: action.payload.uuid.substring(0, 8) + '...',
+          name: action.payload.name
+        } : null
+      });
+      
       return {
         ...state,
         activeLicense: action.payload,
@@ -112,6 +140,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     try {
       const authResponse = await authApiService.login(credentials);
       
+      console.log('🔑 [AuthContext] Tokens reçus lors du login:', {
+        hasAccessToken: !!authResponse.tokens?.access_token,
+        hasRefreshToken: !!authResponse.tokens?.refresh_token,
+        accessLength: authResponse.tokens?.access_token?.length || 0,
+        refreshLength: authResponse.tokens?.refresh_token?.length || 0
+      });
+      
       // Stocker les tokens de manière sécurisée
       await secureStorageService.storeTokens(authResponse.tokens);
       
@@ -136,10 +171,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
       // Récupérer les licences de l'utilisateur
       try {
+        console.log('🔍 [AuthContext] Tentative de récupération des licences avec token:', {
+          hasToken: !!authResponse.tokens.access_token,
+          tokenLength: authResponse.tokens.access_token?.length || 0,
+          tokenStart: authResponse.tokens.access_token?.substring(0, 20) + '...'
+        });
+        
         const licenses = await licenseApiService.getUserLicenses(authResponse.tokens.access_token);
+        
+        console.log('✅ [AuthContext] Licences récupérées avec succès:', {
+          count: licenses.length,
+          licenses: licenses.map(l => ({ uuid: l.uuid.substring(0, 8) + '...', name: l.name }))
+        });
+        
         dispatch({ type: 'SET_LICENSES', payload: licenses });
       } catch (error) {
-        console.warn('Impossible de récupérer les licences:', error);
+        console.error('❌ [AuthContext] Erreur lors de la récupération des licences:', {
+          error: error instanceof Error ? error.message : error,
+          tokenUsed: authResponse.tokens.access_token?.substring(0, 20) + '...',
+          hasToken: !!authResponse.tokens.access_token
+        });
         // Les licences ne sont pas critiques pour la connexion, continuer sans
       }
     } catch (error: any) {
@@ -269,10 +320,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
             // Récupérer les licences avec le nouveau token
             try {
+              console.log('🔍 [AuthContext] Récupération des licences avec token rafraîchi:', {
+                hasToken: !!newTokens.access_token,
+                tokenLength: newTokens.access_token?.length || 0
+              });
+              
               const licenses = await licenseApiService.getUserLicenses(newTokens.access_token);
+              
+              console.log('✅ [AuthContext] Licences récupérées (token rafraîchi):', {
+                count: licenses.length
+              });
+              
               dispatch({ type: 'SET_LICENSES', payload: licenses });
             } catch (error) {
-              console.warn('Impossible de récupérer les licences:', error);
+              console.error('❌ [AuthContext] Erreur licences (token rafraîchi):', error);
             }
           } catch (error) {
             // Échec du refresh, supprimer les tokens
@@ -298,10 +359,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
           // Récupérer les licences avec le token existant
           try {
+            console.log('🔍 [AuthContext] Récupération des licences avec token stocké:', {
+              hasToken: !!storedTokens.access_token,
+              tokenLength: storedTokens.access_token?.length || 0
+            });
+            
             const licenses = await licenseApiService.getUserLicenses(storedTokens.access_token);
+            
+            console.log('✅ [AuthContext] Licences récupérées (token stocké):', {
+              count: licenses.length
+            });
+            
             dispatch({ type: 'SET_LICENSES', payload: licenses });
           } catch (error) {
-            console.warn('Impossible de récupérer les licences:', error);
+            console.error('❌ [AuthContext] Erreur licences (token stocké):', error);
           }
         } else {
           // Token expiré et pas de refresh token
