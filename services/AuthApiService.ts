@@ -161,36 +161,14 @@ export class AuthApiService {
   }
 
   /**
-   * Récupération des informations utilisateur (optionnel)
+   * Récupération des informations utilisateur (endpoint non disponible)
+   * Retourne null car l'endpoint /me n'est pas implémenté dans l'API
    */
   async getUserInfo(accessToken: string): Promise<any> {
-    try {
-      const response = await fetch(`${API_BASE_URL}${config.auth.userInfo}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new AuthApiError(
-          'USER_INFO_ERROR',
-          'Impossible de récupérer les informations utilisateur'
-        );
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (error instanceof AuthApiError) {
-        throw error;
-      }
-
-      throw new AuthApiError(
-        'USER_INFO_ERROR',
-        'Erreur lors de la récupération des informations utilisateur'
-      );
-    }
+    // L'endpoint /me n'existe pas dans cette API
+    // Retourner null pour indiquer que les informations utilisateur ne sont pas disponibles
+    console.warn('[AuthApiService] Endpoint /me non disponible - informations utilisateur non récupérées');
+    return null;
   }
 }
 

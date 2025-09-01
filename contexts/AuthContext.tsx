@@ -54,17 +54,42 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         licenses: action.payload.map(l => ({
           uuid: l.uuid.substring(0, 8) + '...',
           name: l.name,
-          expired: l.exp <= Math.floor(Date.now() / 1000)
+          expired: l.exp <= Math.floor(Date.now() / 1000),
+          hasApiRoles: !!l.api_roles,
+          hasRecipeRoles: !!(l.api_roles && l.api_roles['api-recipe']),
+          recipeRoles: l.api_roles?.['api-recipe']?.roles || []
         }))
       });
       
       // Sélection simple : première licence valide (temporaire pour diagnostic)
       const currentTime = Math.floor(Date.now() / 1000);
-      const validLicense = action.payload.find(license => 
-        license.exp > currentTime &&
-        license.api_roles['api-recipe'] && 
-        license.api_roles['api-recipe'].roles.length > 0
-      );
+      
+      console.log('🔍 [AuthContext] Recherche de licence valide - currentTime:', currentTime);
+      
+      const validLicense = action.payload.find(license => {
+        const isNotExpired = license.exp > currentTime;
+        const hasApiRoles = !!license.api_roles;
+        const hasRecipeRoles = !!(license.api_roles && license.api_roles['api-recipe']);
+        const hasRecipeRolesList = !!(license.api_roles && license.api_roles['api-recipe'] && license.api_roles['api-recipe'].roles.length > 0);
+        
+        console.log('🔍 [AuthContext] Vérification licence:', {
+          uuid: license.uuid.substring(0, 8) + '...',
+          name: license.name,
+          exp: license.exp,
+          isNotExpired,
+          hasApiRoles,
+          hasRecipeRoles,
+          hasRecipeRolesList,
+          recipeRoles: license.api_roles?.['api-recipe']?.roles || 'N/A'
+        });
+        
+        return isNotExpired && hasApiRoles && hasRecipeRoles && hasRecipeRolesList;
+      });
+      
+      console.log('🎯 [AuthContext] Résultat recherche licence valide:', validLicense ? {
+        uuid: validLicense.uuid.substring(0, 8) + '...',
+        name: validLicense.name
+      } : 'Aucune licence valide trouvée');
       
       const selectedLicense = state.activeLicense || validLicense || null;
       
@@ -185,13 +210,42 @@ export function AuthProvider({ children }: PropsWithChildren) {
         });
         
         dispatch({ type: 'SET_LICENSES', payload: licenses });
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ [AuthContext] Erreur lors de la récupération des licences:', {
           error: error instanceof Error ? error.message : error,
+          errorCode: error.code,
           tokenUsed: authResponse.tokens.access_token?.substring(0, 20) + '...',
           hasToken: !!authResponse.tokens.access_token
         });
-        // Les licences ne sont pas critiques pour la connexion, continuer sans
+        
+        // Si c'est une erreur de token (401), essayer de refresh et retry
+        if (error.code === 'HTTP_ERROR' && error.details?.includes('401') && authResponse.tokens.refresh_token) {
+          console.log('🔄 [AuthContext] Token expiré, tentative de refresh et retry...');
+          try {
+            // Refresh les tokens
+            const newTokens = await authApiService.refreshToken(authResponse.tokens.refresh_token);
+            
+            // Mettre à jour les tokens dans le state
+            dispatch({ type: 'UPDATE_TOKENS', payload: newTokens });
+            
+            // Mettre à jour le stockage sécurisé
+            await secureStorageService.storeTokens(newTokens);
+            
+            // Retry avec le nouveau token
+            const licenses = await licenseApiService.getUserLicenses(newTokens.access_token);
+            console.log('✅ [AuthContext] Licences récupérées après refresh:', {
+              count: licenses.length,
+              licenses: licenses.map(l => ({ uuid: l.uuid.substring(0, 8) + '...', name: l.name }))
+            });
+            dispatch({ type: 'SET_LICENSES', payload: licenses });
+          } catch (refreshError) {
+            console.error('❌ [AuthContext] Échec du refresh ou retry:', refreshError);
+            // Les licences ne sont pas critiques pour la connexion, continuer sans
+          }
+        } else {
+          // Autres types d'erreurs, continuer sans licences
+          console.log('ℹ️ [AuthContext] Continuing without licenses due to non-token error');
+        }
       }
     } catch (error: any) {
       const authError: AuthError = {

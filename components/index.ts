@@ -18,4 +18,5 @@ export { StepsList, StepItem } from './StepsList';
 export { TimeDisplay } from './TimeDisplay';
 export { TypeBadge } from './TypeBadge';
 export { UtensilsList } from './UtensilsList';
+export { LoadingSpinner } from './LoadingSpinner';
 

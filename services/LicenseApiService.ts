@@ -56,6 +56,10 @@ export class LicenseApiService {
    * Récupère les licences de l'utilisateur connecté
    */
   async getUserLicenses(token: string): Promise<License[]> {
+    console.log('🚀 [LicenseAPI] Début de getUserLicenses');
+    console.log('🚀 [LicenseAPI] URL:', API_BASE_URL + '/mine');
+    console.log('🚀 [LicenseAPI] Token:', token.substring(0, 20) + '...');
+    
     try {
       const url = API_BASE_URL + '/mine';
       
@@ -67,7 +71,24 @@ export class LicenseApiService {
         },
       });
 
+      console.log('📡 [LicenseAPI] Réponse HTTP reçue:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
       if (!response.ok) {
+        console.error('❌ [LicenseAPI] Erreur HTTP:', response.status, response.statusText);
+        
+        // Essayer de lire le corps de l'erreur
+        try {
+          const errorBody = await response.text();
+          console.error('❌ [LicenseAPI] Corps de l\'erreur:', errorBody);
+        } catch (e) {
+          console.error('❌ [LicenseAPI] Impossible de lire le corps de l\'erreur');
+        }
+        
         throw new LicenseApiError(
           'HTTP_ERROR',
           'Erreur lors de la récupération des licences',
@@ -126,6 +147,12 @@ export class LicenseApiService {
 
       return licenses as unknown as License[];
     } catch (error) {
+      console.error('❌ [LicenseAPI] Exception capturée:', {
+        type: error instanceof Error ? error.constructor.name : typeof error,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
       if (error instanceof LicenseApiError) {
         throw error;
       }
