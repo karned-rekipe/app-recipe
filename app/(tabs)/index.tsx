@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import RecipeList from "../../components/RecipeList";
 import { sampleRecipes } from "../../data/sampleRecipes";
 import { Recipe } from "../../types/Recipe";
-import { UserHeader } from "../../components/auth/UserHeader";
 
 export default function RecipeListScreen() {
   const handleRecipePress = (recipe: Recipe) => {
@@ -13,7 +12,6 @@ export default function RecipeListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <UserHeader />
       <View style={styles.content}>
         <RecipeList 
           recipes={sampleRecipes}
