@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Ingredient } from '../types/Recipe';
 import { theme } from '../constants/theme';
+import { formatQuantityForDisplay } from '../utils';
 
 interface IngredientItemProps {
   ingredient: Ingredient;
@@ -19,8 +20,8 @@ interface IngredientsListProps {
 export const IngredientItem: React.FC<IngredientItemProps> = ({ ingredient }) => {
   const formatQuantity = (quantity: number, unit: string): string => {
     if (quantity === 0 && !unit) return '';
-    if (!unit) return quantity.toString();
-    return `${quantity} ${unit}`;
+    if (!unit) return formatQuantityForDisplay(quantity);
+    return `${formatQuantityForDisplay(quantity)} ${unit}`;
   };
 
   const quantityText = formatQuantity(ingredient.quantity, ingredient.unit);

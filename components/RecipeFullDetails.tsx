@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../constants/theme';
 import { Recipe } from '../types/Recipe';
-import { formatCountryWithFlag } from '../utils';
+import { formatCountryWithFlag, adjustIngredientsQuantities } from '../utils';
 import { mapRecipeToLegacy } from '../utils/recipeMapper';
 import { IngredientsList } from './IngredientsList';
 import { PersonCountSelector } from './PersonCountSelector';
@@ -21,6 +21,17 @@ interface RecipeFullDetailsProps {
  */
 export const RecipeFullDetails: React.FC<RecipeFullDetailsProps> = ({ recipe }) => {
   const legacyRecipe = mapRecipeToLegacy(recipe);
+  const [currentPersonCount, setCurrentPersonCount] = useState(recipe.number_of_persons || 1);
+  
+  // Calcule les ingrédients avec quantités ajustées selon le nombre de personnes
+  const adjustedIngredients = useMemo(() => {
+    const originalPersonCount = recipe.number_of_persons || 1;
+    return adjustIngredientsQuantities(recipe.ingredients, originalPersonCount, currentPersonCount);
+  }, [recipe.ingredients, recipe.number_of_persons, currentPersonCount]);
+
+  const handlePersonCountChange = (count: number) => {
+    setCurrentPersonCount(count);
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -67,10 +78,7 @@ export const RecipeFullDetails: React.FC<RecipeFullDetailsProps> = ({ recipe }) 
       {recipe.number_of_persons && (
         <PersonCountSelector 
           initialCount={recipe.number_of_persons}
-          onCountChange={(count) => {
-            // TODO: Implémenter la logique pour ajuster les quantités d'ingrédients
-            console.log('Nouveau nombre de personnes:', count);
-          }}
+          onCountChange={handlePersonCountChange}
         />
       )}
 
@@ -79,8 +87,8 @@ export const RecipeFullDetails: React.FC<RecipeFullDetailsProps> = ({ recipe }) 
         <UtensilsList utensils={recipe.utensils} />
       )}
 
-      {/* Ingrédients */}
-      <IngredientsList ingredients={recipe.ingredients} />
+      {/* Ingrédients avec quantités ajustées */}
+      <IngredientsList ingredients={adjustedIngredients} />
 
       {/* Étapes */}
       <StepsList steps={recipe.steps} />
