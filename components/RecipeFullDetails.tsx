@@ -2,8 +2,10 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../constants/theme';
 import { Recipe } from '../types/Recipe';
+import { formatCountryWithFlag } from '../utils';
 import { mapRecipeToLegacy } from '../utils/recipeMapper';
 import { IngredientsList } from './IngredientsList';
+import { PersonCountSelector } from './PersonCountSelector';
 import { RecipeMetadata } from './RecipeMetadata';
 import { Section } from './Section';
 import { StepsList } from './StepsList';
@@ -24,6 +26,15 @@ export const RecipeFullDetails: React.FC<RecipeFullDetailsProps> = ({ recipe }) 
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Titre de la recette */}
       <Text style={styles.title}>{recipe.name}</Text>
+
+      {/* Origine avec drapeau */}
+      {recipe.origin_country && (
+        <View style={styles.originContainer}>
+          <Text style={styles.originText}>
+            {formatCountryWithFlag(recipe.origin_country)}
+          </Text>
+        </View>
+      )}
       
       {/* En-tête avec métadonnées */}
       <RecipeMetadata 
@@ -32,42 +43,35 @@ export const RecipeFullDetails: React.FC<RecipeFullDetailsProps> = ({ recipe }) 
         layout="horizontal" 
       />
 
-      {/* Description */}
-      {recipe.description && (
-        <Section title="Description">
-          <Text style={styles.description}>{recipe.description}</Text>
-        </Section>
+      {/* Caractéristiques (sans titre) */}
+      {recipe.attributes.length > 0 && (
+        <View style={styles.attributesContainer}>
+          {recipe.attributes.map((attribute, index) => (
+            <View key={`attribute-${index}`} style={styles.attributeBadge}>
+              <Text style={styles.attributeText}>{attribute}</Text>
+            </View>
+          ))}
+        </View>
       )}
 
-      {/* Informations générales */}
-      <Section title="Informations">
-        <View style={styles.infoGrid}>
-          {recipe.number_of_persons && (
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Personnes</Text>
-              <Text style={styles.infoValue}>{recipe.number_of_persons}</Text>
-            </View>
-          )}
-          {recipe.origin_country && (
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Origine</Text>
-              <Text style={styles.infoValue}>{recipe.origin_country}</Text>
-            </View>
-          )}
+      {/* Description (sans titre) */}
+      {recipe.description && (
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{recipe.description}</Text>
         </View>
-      </Section>
+      )}
 
-      {/* Attributs/Tags */}
-      {recipe.attributes.length > 0 && (
-        <Section title="Caractéristiques">
-          <View style={styles.attributesContainer}>
-            {recipe.attributes.map((attribute, index) => (
-              <View key={`attribute-${index}`} style={styles.attributeBadge}>
-                <Text style={styles.attributeText}>{attribute}</Text>
-              </View>
-            ))}
-          </View>
-        </Section>
+
+
+      {/* Nombre de personnes avec sélecteur */}
+      {recipe.number_of_persons && (
+        <PersonCountSelector 
+          initialCount={recipe.number_of_persons}
+          onCountChange={(count) => {
+            // TODO: Implémenter la logique pour ajuster les quantités d'ingrédients
+            console.log('Nouveau nombre de personnes:', count);
+          }}
+        />
       )}
 
       {/* Ustensiles */}
@@ -103,39 +107,22 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
   },
-  description: {
+  originContainer: {
+    alignItems: 'center',
+    marginVertical: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+  },
+  originText: {
     fontSize: 16,
-    lineHeight: 24,
-    color: theme.colors.text.primary,
-  },
-  infoGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-  infoItem: {
-    backgroundColor: theme.colors.background.white,
-    borderRadius: 8,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    minWidth: 100,
-  },
-  infoLabel: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  infoValue: {
-    fontSize: 16,
-    color: theme.colors.text.primary,
     fontWeight: '600',
+    color: theme.colors.text.primary,
+    textAlign: 'center',
   },
   attributesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    marginBottom: theme.spacing.lg,
   },
   attributeBadge: {
     backgroundColor: theme.colors.primary,
@@ -147,6 +134,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: theme.colors.white,
     fontWeight: '500',
+  },
+  descriptionContainer: {
+    marginBottom: theme.spacing.xxl,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: theme.colors.text.primary,
   },
   source: {
     fontSize: 14,

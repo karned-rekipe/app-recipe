@@ -13,7 +13,7 @@ interface UtensilsListProps {
  */
 export const UtensilsList: React.FC<UtensilsListProps> = ({ 
   utensils, 
-  title = "Ustensiles nécessaires" 
+  title = "Ustensiles" 
 }) => {
   if (utensils.length === 0) {
     return (
