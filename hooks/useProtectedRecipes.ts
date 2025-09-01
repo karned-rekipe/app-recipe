@@ -104,7 +104,7 @@ export function useProtectedRecipes(options: UseProtectedRecipesOptions = {}) {
         // Mettre à jour la recette dans la liste
         setRecipes(prev => 
           prev.map(recipe => 
-            recipe.id === id ? response.data! : recipe
+            recipe.uuid === id ? response.data! : recipe
           )
         );
         return response.data;
@@ -134,7 +134,7 @@ export function useProtectedRecipes(options: UseProtectedRecipesOptions = {}) {
         return false;
       } else if (response.data?.success) {
         // Supprimer la recette de la liste
-        setRecipes(prev => prev.filter(recipe => recipe.id !== id));
+        setRecipes(prev => prev.filter(recipe => recipe.uuid !== id));
         return true;
       }
     } catch (err: any) {

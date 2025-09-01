@@ -10,17 +10,19 @@ const API_BASE_URL = config.LICENSE_API_URL;
 
 // Interface pour la réponse réelle de l'API (différente des types génériques)
 interface LicenseApiResponse {
-  dataStatus: 'success' | 'error';
-  licenseCount: number;
+  dataStatus?: 'success' | 'error';
+  licenseCount?: number;
   message: string;
-  status: number;
-  licenses: Array<{
+  status: number | string; // Peut être number ou string selon l'API
+  licenses?: Array<{
     uuid: string;
     name: string;
     hasRecipeRoles: boolean;
     expired: boolean;
     // autres propriétés selon le besoin
   }>;
+  // L'API peut retourner directement un tableau de licences
+  data?: Array<any>;
 }
 
 class LicenseApiError extends Error {
@@ -75,15 +77,54 @@ export class LicenseApiService {
 
       const data = await response.json() as LicenseApiResponse;
       
-      if (data.dataStatus !== 'success') {
+      console.log('🔍 [LicenseAPI] Réponse complète reçue:', JSON.stringify(data, null, 2));
+      
+      console.log('🔍 [LicenseAPI] Réponse reçue:', {
+        dataStatus: data.dataStatus,
+        message: data.message,
+        status: data.status,
+        licenseCount: data.licenseCount,
+        hasLicenses: !!data.licenses,
+        hasData: !!data.data,
+        isArray: Array.isArray(data)
+      });
+      
+      // Accepter plusieurs formats de statut de succès
+      const isSuccess = data.dataStatus === 'success' || 
+                       data.status === 200 || 
+                       data.status === 'success' ||
+                       data.message === 'Operation completed successfully' ||
+                       data.message?.toLowerCase().includes('success');
+      
+      if (!isSuccess) {
         throw new LicenseApiError(
           'API_ERROR',
           'API License: ' + data.message,
-          `Status: ${data.status}`
+          `Status: ${data.status}, DataStatus: ${data.dataStatus}`
         );
       }
 
-      return data.licenses as unknown as License[];
+      // Vérifier que nous avons bien des licences - essayer plusieurs formats
+      let licenses: any[] = [];
+      
+      if (Array.isArray(data.licenses)) {
+        licenses = data.licenses;
+      } else if (Array.isArray(data.data)) {
+        licenses = data.data;
+      } else if (Array.isArray(data)) {
+        // L'API peut retourner directement un tableau
+        licenses = data as any[];
+      } else {
+        console.warn('⚠️ [LicenseAPI] Format de licences inattendu, création d\'un tableau vide');
+        licenses = [];
+      }
+
+      console.log('✅ [LicenseAPI] Licences parsées:', {
+        count: licenses.length,
+        licenses: licenses.map(l => ({ uuid: l.uuid?.substring(0, 8) + '...', name: l.name }))
+      });
+
+      return licenses as unknown as License[];
     } catch (error) {
       if (error instanceof LicenseApiError) {
         throw error;

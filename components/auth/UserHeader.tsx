@@ -23,7 +23,7 @@ export function UserHeader() {
           onPress: async () => {
             try {
               await signOut();
-            } catch (error) {
+            } catch {
               Alert.alert('Erreur', 'Problème lors de la déconnexion');
             }
           },

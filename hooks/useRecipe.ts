@@ -5,6 +5,6 @@ import { Recipe } from '../types/Recipe';
 export const useRecipe = (id: string | undefined): Recipe | null => {
   return useMemo(() => {
     if (!id) return null;
-    return sampleRecipes.find((recipe) => recipe.id === id) || null;
+    return sampleRecipes.find((recipe) => recipe.uuid === id) || null;
   }, [id]);
 };

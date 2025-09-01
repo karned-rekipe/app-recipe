@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { AuthInput } from './AuthInput';
 import { AuthButton } from './AuthButton';
-import { LoginHeader } from './LoginHeader';
 import { useAuth } from '../../contexts/AuthContext';
 import { theme } from '../../constants/theme';
 import type { LoginCredentials } from '../../types/Auth';

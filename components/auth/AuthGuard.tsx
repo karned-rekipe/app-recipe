@@ -32,7 +32,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
       // L'utilisateur est authentifié mais sur un écran de connexion
       router.replace('/(tabs)');
     }
-  }, [isAuthenticated, isLoading, segments]);
+  }, [isAuthenticated, isLoading, segments, router]);
 
   // Afficher un indicateur de chargement pendant la vérification
   if (isLoading) {

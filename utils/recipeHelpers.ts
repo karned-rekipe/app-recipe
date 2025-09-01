@@ -1,7 +1,7 @@
 import { theme } from '../constants/theme';
-import { Recipe } from '../types/Recipe';
+import { LegacyRecipe } from '../types/Recipe';
 
-export const getTypeBadgeColor = (type: Recipe['type']): string => {
+export const getTypeBadgeColor = (type: LegacyRecipe['type']): string => {
   switch (type) {
     case 'entrée':
       return theme.colors.badge.entrée;
@@ -14,7 +14,7 @@ export const getTypeBadgeColor = (type: Recipe['type']): string => {
   }
 };
 
-export const getDifficultyStars = (difficulty: Recipe['difficulty']): string => {
+export const getDifficultyStars = (difficulty: LegacyRecipe['difficulty']): string => {
   return '👨‍🍳'.repeat(difficulty);
 };
 

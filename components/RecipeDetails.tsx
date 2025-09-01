@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { theme } from '../constants/theme';
 import { Recipe } from '../types/Recipe';
+import { mapRecipeToLegacy } from '../utils/recipeMapper';
 import { RecipeMetadata } from './RecipeMetadata';
 
 interface RecipeDetailsProps {
@@ -9,10 +10,12 @@ interface RecipeDetailsProps {
 }
 
 export const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipe }) => {
+  const legacyRecipe = mapRecipeToLegacy(recipe);
+  
   return (
     <View style={styles.detailsContainer}>
       <RecipeMetadata 
-        recipe={recipe} 
+        recipe={legacyRecipe} 
         variant="detail" 
         layout="horizontal" 
       />

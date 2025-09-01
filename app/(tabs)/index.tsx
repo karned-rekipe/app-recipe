@@ -6,8 +6,8 @@ import { Recipe } from "../../types/Recipe";
 
 export default function RecipeListScreen() {
   const handleRecipePress = (recipe: Recipe) => {
-    // Navigation vers l'écran de détail avec l'ID de la recette
-    router.push(`/recipe-details?id=${recipe.id}`);
+    // Navigation vers l'écran de détail avec l'UUID de la recette
+    router.push(`/recipe-details?id=${recipe.uuid}`);
   };
 
   return (

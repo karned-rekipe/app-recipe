@@ -175,6 +175,31 @@ class SecureStorageService {
   }
 
   /**
+   * Vérifie si le token d'accès a expiré
+   */
+  async isTokenExpired(): Promise<boolean> {
+    try {
+      const tokens = await this.getTokens();
+      if (!tokens?.access_token) {
+        return true;
+      }
+
+      // Décoder le JWT pour vérifier l'expiration
+      try {
+        const payload = JSON.parse(atob(tokens.access_token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        return payload.exp < currentTime;
+      } catch (decodeError) {
+        console.warn('⚠️  Impossible de décoder le token, considéré comme expiré');
+        return true;
+      }
+    } catch (error) {
+      console.error('❌ [SecureStorage] Erreur lors de la vérification d\'expiration:', error);
+      return true; // En cas d'erreur, considérer comme expiré pour forcer la reconnexion
+    }
+  }
+
+  /**
    * Supprime tous les tokens stockés
    */
   async clearTokens(): Promise<void> {

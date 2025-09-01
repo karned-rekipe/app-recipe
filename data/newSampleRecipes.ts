@@ -3,7 +3,7 @@ import { Recipe } from '../types/Recipe';
 export const sampleRecipes: Recipe[] = [
   {
     "uuid": "a32794ea-31e2-4a9d-9d25-495bccdbfe4c",
-    "name": "Sample Chicken Tikka Masala",
+    "name": "Chicken Tikka Masala",
     "description": "Un plat indien classique composé de poulet grillé dans une sauce crémeuse et épicée.",
     "price": 0,
     "quantity": 4,
@@ -156,7 +156,7 @@ export const sampleRecipes: Recipe[] = [
   },
   {
     "uuid": "1a3599cc-f661-4af5-8abc-3282248a77c2",
-    "name": "Sample Salade d'œufs facile",
+    "name": "Salade d'œufs facile",
     "description": "Une recette simple et délicieuse de salade d'œufs, parfaite pour un déjeuner rapide ou un dîner léger.",
     "price": 0,
     "quantity": 4,
