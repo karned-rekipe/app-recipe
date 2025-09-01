@@ -3,10 +3,25 @@
  * Responsable de la communication avec l'API de licences
  */
 
-import type { LicenseResponse, LicenseError, License } from '../types/License';
+import type { License } from '../types/License';
 import config from '../config/api';
 
 const API_BASE_URL = config.LICENSE_API_URL;
+
+// Interface pour la réponse réelle de l'API (différente des types génériques)
+interface LicenseApiResponse {
+  dataStatus: 'success' | 'error';
+  licenseCount: number;
+  message: string;
+  status: number;
+  licenses: Array<{
+    uuid: string;
+    name: string;
+    hasRecipeRoles: boolean;
+    expired: boolean;
+    // autres propriétés selon le besoin
+  }>;
+}
 
 class LicenseApiError extends Error {
   code: string;
@@ -38,68 +53,45 @@ export class LicenseApiService {
   /**
    * Récupère les licences de l'utilisateur connecté
    */
-  async getUserLicenses(accessToken: string): Promise<License[]> {
+  async getUserLicenses(token: string): Promise<License[]> {
     try {
-      console.log('🔍 [LicenseAPI] Récupération des licences utilisateur...');
+      const url = API_BASE_URL + '/mine';
       
-      const response = await fetch(`${API_BASE_URL}${config.license.mine}`, {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'accept': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token}`,
         },
-      });
-
-      const data: LicenseResponse = await response.json();
-      
-      console.log('🔍 [LicenseAPI] Réponse de l\'API licences:', { 
-        status: response.status,
-        dataStatus: data.status,
-        licenseCount: data.data?.length || 0
       });
 
       if (!response.ok) {
         throw new LicenseApiError(
-          'LICENSE_API_ERROR',
-          data.message || 'Erreur lors de la récupération des licences',
-          JSON.stringify(data)
+          'HTTP_ERROR',
+          'Erreur lors de la récupération des licences',
+          `${response.status} ${response.statusText}`
         );
       }
 
-      if (data.status !== 'success') {
+      const data = await response.json() as LicenseApiResponse;
+      
+      if (data.dataStatus !== 'success') {
         throw new LicenseApiError(
-          'LICENSE_ERROR',
-          data.message || 'Erreur dans la réponse de l\'API licences'
+          'API_ERROR',
+          'API License: ' + data.message,
+          `Status: ${data.status}`
         );
       }
 
-      console.log('✅ [LicenseAPI] Licences récupérées avec succès:', {
-        count: data.data.length,
-        licenses: data.data.map(license => ({
-          uuid: license.uuid,
-          name: license.name,
-          hasRecipeRoles: !!license.api_roles['api-recipe']
-        }))
-      });
-
-      return data.data;
+      return data.licenses as unknown as License[];
     } catch (error) {
       if (error instanceof LicenseApiError) {
         throw error;
       }
-
-      if (error instanceof TypeError && error.message === 'Network request failed') {
-        throw new LicenseApiError(
-          'NETWORK_ERROR',
-          'Impossible de contacter le serveur de licences. Vérifiez votre connexion.'
-        );
-      }
-
-      console.error('❌ [LicenseAPI] Erreur inattendue:', error);
+      
       throw new LicenseApiError(
-        'UNKNOWN_ERROR',
-        'Une erreur inattendue s\'est produite lors de la récupération des licences',
+        'NETWORK_ERROR',
+        'Erreur réseau lors de la récupération des licences',
         error instanceof Error ? error.message : 'Erreur inconnue'
       );
     }
