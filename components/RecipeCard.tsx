@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Recipe } from '../types/Recipe';
+import { LegacyRecipe } from '../types/Recipe';
 import { RecipeMetadata } from './RecipeMetadata';
 
 type Props = {
-  recipe: Recipe;
+  recipe: LegacyRecipe;
   onPress?: () => void;
 };
 

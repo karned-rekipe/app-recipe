@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Recipe } from '../types/Recipe';
 import { RecipeFilters } from '../types/RecipeFilters';
+import { mapRecipesToLegacy } from '../utils/recipeMapper';
 
 type Props = {
   visible: boolean;
@@ -26,10 +27,13 @@ export default function FilterModal({
   onFiltersChange, 
   recipes 
 }: Props) {
+  // Convertir les recettes API vers le format legacy pour les filtres
+  const legacyRecipes = mapRecipesToLegacy(recipes);
+  
   // Extraire les valeurs uniques des recettes
-  const uniqueTypes = [...new Set(recipes.map(r => r.type))];
-  const uniqueDifficulties = [...new Set(recipes.map(r => r.difficulty))].sort((a, b) => a - b);
-  const uniqueCountries = [...new Set(recipes.map(r => r.country))].sort();
+  const uniqueTypes = [...new Set(legacyRecipes.map(r => r.type))];
+  const uniqueDifficulties = [...new Set(legacyRecipes.map(r => r.difficulty))].sort((a, b) => a - b);
+  const uniqueCountries = [...new Set(legacyRecipes.map(r => r.country))].sort();
 
   const toggleType = (type: string) => {
     const newTypes = filters.types.includes(type)
@@ -156,7 +160,7 @@ export default function FilterModal({
 
           {/* Pays */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Pays d'origine</Text>
+            <Text style={styles.sectionTitle}>Pays d&apos;origine</Text>
             <View style={styles.optionsColumn}>
               {uniqueCountries.map(country => (
                 <Pressable

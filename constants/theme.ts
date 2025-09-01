@@ -24,6 +24,11 @@ export const theme = {
       color: '#000',
       opacity: 0.25,
     },
+    // Nouvelles couleurs pour l'authentification
+    border: '#E1E1E1',
+    error: '#FF3B30',
+    success: '#34C759',
+    textSecondary: '#666',
   },
   spacing: {
     xs: 4,

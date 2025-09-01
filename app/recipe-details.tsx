@@ -1,13 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
     ErrorState,
-    PlaceholderText,
-    RecipeDetails,
+    RecipeFullDetails,
     RecipeHeader,
-    RecipeTitle,
-    Section,
 } from '../components';
 import { messages, theme } from '../constants';
 import { useRecipe } from '../hooks';
@@ -27,26 +24,14 @@ export default function RecipeDetailsScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <RecipeHeader image={recipe.image} onClose={() => router.back()} />
-
-      <View style={styles.content}>
-        <RecipeDetails recipe={recipe} />
-        <RecipeTitle name={recipe.name} countryFlag={recipe.countryFlag} />
-
-        <Section title={messages.sections.ingredients}>
-          <PlaceholderText text={messages.placeholders.ingredients} />
-        </Section>
-
-        <Section title={messages.sections.utensils}>
-          <PlaceholderText text={messages.placeholders.utensils} />
-        </Section>
-
-        <Section title={messages.sections.instructions}>
-          <PlaceholderText text={messages.placeholders.instructions} />
-        </Section>
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <RecipeHeader 
+        image={recipe.thumbnail_url || recipe.large_image_url || undefined} 
+        onClose={() => router.back()} 
+      />
+      
+      <RecipeFullDetails recipe={recipe} />
+    </View>
   );
 }
 

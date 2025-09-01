@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { theme } from '../constants/theme';
-import { Recipe } from '../types/Recipe';
+import { LegacyRecipe } from '../types/Recipe';
 import { getDifficultyStars } from '../utils/recipeHelpers';
 
 interface DifficultyStarsProps {
-  difficulty: Recipe['difficulty'];
+  difficulty: LegacyRecipe['difficulty'];
   size?: 'small' | 'medium' | 'large';
 }
 

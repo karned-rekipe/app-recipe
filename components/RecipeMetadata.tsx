@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { theme } from '../constants/theme';
-import { Recipe } from '../types/Recipe';
+import { LegacyRecipe } from '../types/Recipe';
 import { DifficultyStars } from './DifficultyStars';
 import { TimeDisplay } from './TimeDisplay';
 import { TypeBadge } from './TypeBadge';
 
 interface RecipeMetadataProps {
-  recipe: Recipe;
+  recipe: LegacyRecipe;
   variant?: 'card' | 'detail';
   layout?: 'horizontal' | 'vertical';
 }

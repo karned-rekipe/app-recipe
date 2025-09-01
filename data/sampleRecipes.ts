@@ -2,123 +2,415 @@ import { Recipe } from '../types/Recipe';
 
 export const sampleRecipes: Recipe[] = [
   {
-    id: '1',
-    name: 'Coq au Vin',
-    type: 'plat',
-    difficulty: 3,
-    totalTime: 120,
-    country: 'France',
-    countryFlag: '🇫🇷',
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop&crop=center',
+    "uuid": "a32794ea-31e2-4a9d-9d25-495bccdbfe4c",
+    "name": "Sample Chicken Tikka Masala",
+    "description": "Un plat indien classique composé de poulet grillé dans une sauce crémeuse et épicée.",
+    "price": 0,
+    "quantity": 4,
+    "number_of_persons": 4,
+    "origin_country": "Inde",
+    "attributes": [
+      "Facile",
+      "Spécial",
+      "Viande"
+    ],
+    "utensils": [
+      "Poêle",
+      "Casserole",
+      "Mixeur"
+    ],
+    "ingredients": [
+      {
+        "name": "Poulet",
+        "quantity": 500,
+        "unit": "g",
+        "created_by": null
+      },
+      {
+        "name": "Yaourt grec",
+        "quantity": 150,
+        "unit": "ml",
+        "created_by": null
+      },
+      {
+        "name": "Jus de citron",
+        "quantity": 2,
+        "unit": "cuillères à soupe",
+        "created_by": null
+      },
+      {
+        "name": "Gingembre frais râpé",
+        "quantity": 1,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Ail haché",
+        "quantity": 2,
+        "unit": "gousses",
+        "created_by": null
+      },
+      {
+        "name": "Curcuma en poudre",
+        "quantity": 1,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Paprika doux",
+        "quantity": 1,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Cumin moulu",
+        "quantity": 0.5,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Poivre noir moulu",
+        "quantity": 0.5,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Sel",
+        "quantity": 1,
+        "unit": "pincée",
+        "created_by": null
+      },
+      {
+        "name": "Huile végétale",
+        "quantity": 2,
+        "unit": "cuillères à soupe",
+        "created_by": null
+      },
+      {
+        "name": "Oignons hachés",
+        "quantity": 1,
+        "unit": "grand",
+        "created_by": null
+      },
+      {
+        "name": "Pâte de tomates",
+        "quantity": 400,
+        "unit": "g",
+        "created_by": null
+      },
+      {
+        "name": "Crème fraîche épaisse",
+        "quantity": 200,
+        "unit": "ml",
+        "created_by": null
+      },
+      {
+        "name": "Coriandre fraîche hachée",
+        "quantity": 1,
+        "unit": "poignée",
+        "created_by": null
+      }
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "description": "Dans un bol, mélanger le poulet avec le yaourt grec, le jus de citron, le gingembre râpé, l'ail haché, le curcuma, le paprika, le cumin et le poivre noir. Saler.",
+        "duration": "15 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 2,
+        "description": "Laisser mariner au réfrigérateur pendant au moins 30 minutes.",
+        "duration": "30 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 3,
+        "description": "Chauffer l'huile végétale dans une poêle à feu moyen-vif. Faire cuire le poulet mariné pendant environ 5 minutes de chaque côté, jusqu'à ce qu'il soit doré et cuit.",
+        "duration": "10 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 4,
+        "description": "Retirer le poulet de la poêle et mettre de côté. Ajouter les oignons hachés dans la même poêle et faire revenir jusqu'à ce qu'ils soient ramollis.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 5,
+        "description": "Ajouter la pâte de tomates à la poêle et cuire pendant 2-3 minutes, en remuant constamment. Ajouter ensuite la crème fraîche épaisse, le sel et le poivre noir.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 6,
+        "description": "Remettre le poulet dans la sauce et laisser mijoter pendant 5-10 minutes, jusqu'à ce que la sauce ait épaissi. Garnir de coriandre fraîche hachée avant de servir.",
+        "duration": "15 minutes",
+        "created_by": null
+      }
+    ],
+    "thumbnail_url": null,
+    "large_image_url": null,
+    "source_reference": "https://bellyfull.net/chicken-tikka-masala/",
+    "created_by": null
   },
   {
-    id: '2',
-    name: 'Tiramisu',
-    type: 'dessert',
-    difficulty: 2,
-    totalTime: 240,
-    country: 'Italie',
-    countryFlag: '🇮🇹',
-    image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop&crop=center',
+    "uuid": "1a3599cc-f661-4af5-8abc-3282248a77c2",
+    "name": "Sample Salade d'œufs facile",
+    "description": "Une recette simple et délicieuse de salade d'œufs, parfaite pour un déjeuner rapide ou un dîner léger.",
+    "price": 0,
+    "quantity": 4,
+    "number_of_persons": 4,
+    "origin_country": "États-Unis",
+    "attributes": [
+      "Facile",
+      "Végétarien"
+    ],
+    "utensils": [
+      "Bol",
+      "Fourchette"
+    ],
+    "ingredients": [
+      {
+        "name": "Oeufs durs",
+        "quantity": 6,
+        "unit": "",
+        "created_by": null
+      },
+      {
+        "name": "Mayonnaise",
+        "quantity": 0.25,
+        "unit": "tasse",
+        "created_by": null
+      },
+      {
+        "name": "Moutarde de Dijon",
+        "quantity": 1,
+        "unit": "cuillère à soupe",
+        "created_by": null
+      },
+      {
+        "name": "Ciboulette fraîche hachée",
+        "quantity": 2,
+        "unit": "cuillères à soupe",
+        "created_by": null
+      },
+      {
+        "name": "Sel",
+        "quantity": 0.25,
+        "unit": "cuillère à café",
+        "created_by": null
+      },
+      {
+        "name": "Poivre noir",
+        "quantity": 0.25,
+        "unit": "cuillère à café",
+        "created_by": null
+      }
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "description": "Faire bouillir les œufs dans de l'eau pendant environ 8 minutes.",
+        "duration": "8 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 2,
+        "description": "Égoutter les œufs et les plonger dans de l'eau froide pour arrêter la cuisson.",
+        "duration": "",
+        "created_by": null
+      },
+      {
+        "step_number": 3,
+        "description": "Éplucher les œufs durs et les écraser grossièrement dans un bol.",
+        "duration": "",
+        "created_by": null
+      },
+      {
+        "step_number": 4,
+        "description": "Ajouter la mayonnaise, la moutarde de Dijon, la ciboulette hachée, le sel et le poivre noir. Mélanger jusqu'à ce que tous les ingrédients soient bien combinés.",
+        "duration": "",
+        "created_by": null
+      },
+      {
+        "step_number": 5,
+        "description": "Couvrir et réfrigérer pendant au moins 30 minutes avant de servir.",
+        "duration": "30 minutes",
+        "created_by": null
+      }
+    ],
+    "thumbnail_url": null,
+    "large_image_url": null,
+    "source_reference": "https://bellyfull.net/easy-egg-salad/",
+    "created_by": null
   },
   {
-    id: '3',
-    name: 'Gazpacho',
-    type: 'entrée',
-    difficulty: 1,
-    totalTime: 20,
-    country: 'Espagne',
-    countryFlag: '🇪🇸',
-    image: 'https://images.unsplash.com/photo-1505576391880-b3f9d713dc4f?w=400&h=300&fit=crop&crop=center',
+    "uuid": "04b41443-b5fb-4589-a99e-30474b7482e2",
+    "name": "Bacalhau à Bras",
+    "description": "Un plat traditionnel portugais savoureux et réconfortant fait avec de la morue dessalée, des pommes de terre, des oignons et des œufs.",
+    "price": 0,
+    "quantity": 4,
+    "number_of_persons": 4,
+    "origin_country": "Portugal",
+    "attributes": [
+      "Traditionnel",
+      "Facile à préparer"
+    ],
+    "utensils": [
+      "Poêle",
+      "Casserole",
+      "Fourchette"
+    ],
+    "ingredients": [
+      {
+        "name": "Morue dessalée",
+        "quantity": 500,
+        "unit": "g",
+        "created_by": null
+      },
+      {
+        "name": "Pommes de terre",
+        "quantity": 500,
+        "unit": "g",
+        "created_by": null
+      },
+      {
+        "name": "Oignons",
+        "quantity": 2,
+        "unit": "unité",
+        "created_by": null
+      },
+      {
+        "name": "Ail",
+        "quantity": 2,
+        "unit": "gousse",
+        "created_by": null
+      },
+      {
+        "name": "Huile d'olive",
+        "quantity": 50,
+        "unit": "ml",
+        "created_by": null
+      },
+      {
+        "name": "Oeufs",
+        "quantity": 4,
+        "unit": "unité",
+        "created_by": null
+      },
+      {
+        "name": "Persil frais",
+        "quantity": 1,
+        "unit": "branche",
+        "created_by": null
+      },
+      {
+        "name": "Sel",
+        "quantity": 0,
+        "unit": "",
+        "created_by": null
+      },
+      {
+        "name": "Poivre noir",
+        "quantity": 0,
+        "unit": "",
+        "created_by": null
+      }
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "description": "Faire bouillir de l'eau et cuire la morue pendant environ 5 minutes. La retirer ensuite et la laisser refroidir.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 2,
+        "description": "Eplucher et couper les pommes de terre en fines tranches. Les faire cuire à l'eau bouillante salée jusqu'à ce qu'elles soient tendres.",
+        "duration": "15 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 3,
+        "description": "Eplucher et hacher les oignons. Hacher également l'ail.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 4,
+        "description": "Faire chauffer l'huile d'olive dans une grande poêle. Ajouter les oignons et l'ail et faire revenir jusqu'à ce qu'ils soient translucides.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 5,
+        "description": "Déchiqueter la morue cuite en morceaux. L'ajouter à la poêle avec les oignons et l'ail.",
+        "duration": "2 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 6,
+        "description": "Ajouter les pommes de terre cuites à la poêle. Bien mélanger.",
+        "duration": "2 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 7,
+        "description": "Casser les oeufs dans un bol et battre légèrement. Verser les oeufs battus sur le mélange de poisson et de pommes de terre.",
+        "duration": "2 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 8,
+        "description": "Cuire à feu doux pendant environ 5 minutes, en remuant délicatement, jusqu'à ce que les oeufs soient cuits. Saler et poivrer selon le goût.",
+        "duration": "5 minutes",
+        "created_by": null
+      },
+      {
+        "step_number": 9,
+        "description": "Saupoudrer de persil frais haché avant de servir.",
+        "duration": "1 minute",
+        "created_by": null
+      }
+    ],
+    "thumbnail_url": null,
+    "large_image_url": null,
+    "source_reference": "https://www.voyage-a-lisbonne.com/single-post/la-meilleure-recette-de-morue-le-bacalhau-a-bras",
+    "created_by": null
   },
   {
-    id: '4',
-    name: 'Pad Thaï',
-    type: 'plat',
-    difficulty: 2,
-    totalTime: 45,
-    country: 'Thaïlande',
-    countryFlag: '🇹🇭',
-    image: 'https://images.unsplash.com/photo-1559314809-0f31657def5e?w=400&h=300&fit=crop&crop=center',
+    "uuid": "1ff20e75-fc7a-45b7-95eb-3e2f40fd7c25",
+    "name": "ragout de lapin au poivre",
+    "description": null,
+    "price": null,
+    "quantity": null,
+    "number_of_persons": null,
+    "origin_country": null,
+    "attributes": [],
+    "utensils": [],
+    "ingredients": [],
+    "steps": [],
+    "thumbnail_url": null,
+    "large_image_url": null,
+    "source_reference": null,
+    "created_by": "d3f48a42-0d1e-4270-8e8e-549251cd823d"
   },
   {
-    id: '5',
-    name: 'Crème Brûlée',
-    type: 'dessert',
-    difficulty: 3,
-    totalTime: 180,
-    country: 'France',
-    countryFlag: '🇫🇷',
-    image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '6',
-    name: 'Bruschetta',
-    type: 'entrée',
-    difficulty: 1,
-    totalTime: 15,
-    country: 'Italie',
-    countryFlag: '🇮🇹',
-    image: 'https://images.unsplash.com/photo-1572441713132-51c75654db73?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '7',
-    name: 'Ramen',
-    type: 'plat',
-    difficulty: 3,
-    totalTime: 90,
-    country: 'Japon',
-    countryFlag: '🇯🇵',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '8',
-    name: 'Pancakes',
-    type: 'dessert',
-    difficulty: 1,
-    totalTime: 30,
-    country: 'États-Unis',
-    countryFlag: '🇺🇸',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '9',
-    name: 'Pizza Reine',
-    type: 'plat',
-    difficulty: 2,
-    totalTime: 45,
-    country: 'Italie',
-    countryFlag: '🇮🇹',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '10',
-    name: 'Pizza Margherita',
-    type: 'plat',
-    difficulty: 2,
-    totalTime: 1530,
-    country: 'Italie',
-    countryFlag: '🇮🇹',
-    image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '11',
-    name: 'Panuozzo Diana',
-    type: 'plat',
-    difficulty: 2,
-    totalTime: 35,
-    country: 'Italie',
-    countryFlag: '🇮🇹',
-    image: 'https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=400&h=300&fit=crop&crop=center',
-  },
-  {
-    id: '12',
-    name: 'Wok de crevettes & nouilles sautées',
-    type: 'plat',
-    difficulty: 2,
-    totalTime: 25,
-    country: 'Chine',
-    countryFlag: '🇨🇳',
-    image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&h=300&fit=crop&crop=center',
-  },
+    "uuid": "1ff20e75-fc7a-45b7-95eb-3e2f40fd7d33",
+    "name": "ragout de poulet au poivre vert",
+    "description": null,
+    "price": null,
+    "quantity": null,
+    "number_of_persons": null,
+    "origin_country": null,
+    "attributes": [],
+    "utensils": [],
+    "ingredients": [],
+    "steps": [],
+    "thumbnail_url": null,
+    "large_image_url": null,
+    "source_reference": null,
+    "created_by": "d3f48a42-0d1e-4270-8e8e-549251cd823d"
+  }
 ];

@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { theme } from '../constants/theme';
-import { Recipe } from '../types/Recipe';
+import { LegacyRecipe } from '../types/Recipe';
 import { getTypeBadgeColor } from '../utils/recipeHelpers';
 
 interface TypeBadgeProps {
-  type: Recipe['type'];
+  type: LegacyRecipe['type'];
 }
 
 export const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {

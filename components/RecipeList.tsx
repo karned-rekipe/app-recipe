@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { messages, theme } from '../constants';
-import { Recipe } from '../types/Recipe';
+import { Recipe, LegacyRecipe } from '../types/Recipe';
 import { RecipeFilters, getInitialFilters } from '../types/RecipeFilters';
+import { mapRecipesToLegacy } from '../utils/recipeMapper';
 import { EmptyState } from './EmptyState';
 import FilterModal from './FilterModal';
 import RecipeCard from './RecipeCard';
@@ -18,8 +19,11 @@ export default function RecipeList({ recipes, onRecipePress }: Props) {
   const [filters, setFilters] = useState<RecipeFilters>(getInitialFilters());
   const [showFilterModal, setShowFilterModal] = useState(false);
 
+  // Convertir les recettes API au format legacy pour l'affichage et les filtres
+  const legacyRecipes = useMemo(() => mapRecipesToLegacy(recipes), [recipes]);
+
   const filteredRecipes = useMemo(() => {
-    let filtered = recipes;
+    let filtered = legacyRecipes;
 
     // Filtre par texte de recherche
     if (searchText.trim()) {
@@ -53,14 +57,18 @@ export default function RecipeList({ recipes, onRecipePress }: Props) {
     }
 
     return filtered;
-  }, [recipes, searchText, filters]);
+  }, [legacyRecipes, searchText, filters]);
 
-  const renderRecipe = ({ item }: { item: Recipe }) => (
-    <RecipeCard 
-      recipe={item} 
-      onPress={() => onRecipePress?.(item)}
-    />
-  );
+  const renderRecipe = ({ item }: { item: LegacyRecipe }) => {
+    // Trouver la recette originale pour la passer au callback
+    const originalRecipe = recipes.find(r => r.uuid === item.id);
+    return (
+      <RecipeCard 
+        recipe={item} 
+        onPress={() => originalRecipe && onRecipePress?.(originalRecipe)}
+      />
+    );
+  };
 
   if (filteredRecipes.length === 0) {
     const hasSearchOrFilters = searchText.trim() || 
