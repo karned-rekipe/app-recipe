@@ -1,10 +1,13 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Step } from '../types/Recipe';
 import { theme } from '../constants/theme';
 
 interface StepItemProps {
   step: Step;
+  index: number;
+  checked: boolean;
+  onToggle: (index: number) => void;
 }
 
 interface StepsListProps {
@@ -16,19 +19,43 @@ interface StepsListProps {
  * Composant pour afficher une étape individuelle
  * Responsabilité : formatage et affichage d'une seule étape de recette
  */
-export const StepItem: React.FC<StepItemProps> = ({ step }) => {
+export const StepItem: React.FC<StepItemProps> = ({ 
+  step, 
+  index, 
+  checked, 
+  onToggle 
+}) => {
   return (
-    <View style={styles.stepItem}>
+    <TouchableOpacity 
+      style={styles.stepItem} 
+      onPress={() => onToggle(index)}
+      activeOpacity={0.7}
+    >
+      <View style={styles.checkboxContainer}>
+        <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
+          {checked && <Text style={styles.checkmark}>✓</Text>}
+        </View>
+      </View>
       <View style={styles.stepNumber}>
         <Text style={styles.stepNumberText}>{step.step_number}</Text>
       </View>
       <View style={styles.stepContent}>
-        <Text style={styles.stepDescription}>{step.description}</Text>
+        <Text style={[
+          styles.stepDescription,
+          checked && styles.stepDescriptionChecked
+        ]}>
+          {step.description}
+        </Text>
         {step.duration ? (
-          <Text style={styles.stepDuration}>⏱️ {step.duration}</Text>
+          <Text style={[
+            styles.stepDuration,
+            checked && styles.stepDurationChecked
+          ]}>
+            ⏱️ {step.duration}
+          </Text>
         ) : null}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -40,6 +67,18 @@ export const StepsList: React.FC<StepsListProps> = ({
   steps, 
   title = "Étapes de préparation" 
 }) => {
+  const [checkedSteps, setCheckedSteps] = useState<boolean[]>(
+    new Array(steps.length).fill(false)
+  );
+
+  const toggleStep = (index: number) => {
+    setCheckedSteps(prev => {
+      const newChecked = [...prev];
+      newChecked[index] = !newChecked[index];
+      return newChecked;
+    });
+  };
+
   if (steps.length === 0) {
     return (
       <View style={styles.container}>
@@ -59,7 +98,10 @@ export const StepsList: React.FC<StepsListProps> = ({
         {sortedSteps.map((step, index) => (
           <StepItem 
             key={`step-${step.step_number}-${index}`} 
-            step={step} 
+            step={step}
+            index={index}
+            checked={checkedSteps[index] || false}
+            onToggle={toggleStep}
           />
         ))}
       </View>
@@ -87,6 +129,30 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: theme.colors.border,
+    alignItems: 'flex-start',
+  },
+  checkboxContainer: {
+    marginRight: 12,
+    marginTop: 2,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.background.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  checkmark: {
+    color: theme.colors.background.white,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   stepNumber: {
     width: 32,
@@ -112,10 +178,19 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 8,
   },
+  stepDescriptionChecked: {
+    textDecorationLine: 'line-through',
+    color: theme.colors.textSecondary,
+    opacity: 0.6,
+  },
   stepDuration: {
     fontSize: 12,
     color: theme.colors.textSecondary,
     fontWeight: '500',
+  },
+  stepDurationChecked: {
+    textDecorationLine: 'line-through',
+    opacity: 0.6,
   },
   noSteps: {
     fontSize: 14,
