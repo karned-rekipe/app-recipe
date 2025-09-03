@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "bzh.koden.rekipe",
+      "bundleIdentifier": "bzh.koden.rekipe"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +22,19 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "manifest": {
+        "name": "Rekipe - Application de Recettes",
+        "short_name": "Rekipe",
+        "description": "Application de recettes simple et moderne pour découvrir et gérer vos recettes préférées.",
+        "theme_color": "#ffb300",
+        "background_color": "#fffbe6",
+        "display": "standalone",
+        "orientation": "portrait",
+        "lang": "fr",
+        "scope": "/",
+        "start_url": "/"
+      }
     },
     "plugins": [
       "expo-router",

@@ -7,6 +7,7 @@ export { ErrorState } from './ErrorState';
 export { IngredientsList, IngredientItem } from './IngredientsList';
 export { LicenseInfo } from './LicenseInfo';
 export { LoginBackground } from './LoginBackground';
+export { PersonCountSelector } from './PersonCountSelector';
 export { PlaceholderText } from './PlaceholderText';
 export { RecipeDetails } from './RecipeDetails';
 export { RecipeFullDetails } from './RecipeFullDetails';
