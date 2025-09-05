@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: theme.spacing.sm,
+    paddingBottom: theme.spacing.xl + 56 + theme.spacing.lg, // Espace pour le FAB
   },
   row: {
     justifyContent: 'space-around',

@@ -20,4 +20,13 @@ export { TimeDisplay } from './TimeDisplay';
 export { TypeBadge } from './TypeBadge';
 export { UtensilsList } from './UtensilsList';
 export { LoadingSpinner } from './LoadingSpinner';
+export { FloatingActionButton } from './FloatingActionButton';
+
+// Forms
+export { FormInput } from './forms/FormInput';
+export { FormListManager } from './forms/FormListManager';
+export { IngredientForm, IngredientItem as FormIngredientItem } from './forms/IngredientForm';
+export { StepForm, StepItem as FormStepItem } from './forms/StepForm';
+export { TagForm, TagItem } from './forms/TagForm';
+export { RecipeForm } from './forms/RecipeForm';
 

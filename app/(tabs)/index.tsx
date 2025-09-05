@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import RecipeList from "../../components/RecipeList";
 import { LoadingSpinner, ErrorState } from "../../components";
+import { FloatingActionButton } from "../../components/FloatingActionButton";
 import { useRecipeApi } from "../../hooks";
 import { Recipe } from "../../types/Recipe";
 
@@ -13,6 +14,10 @@ export default function RecipeListScreen() {
     // Charger les recettes au montage du composant
     getRecipes();
   }, [getRecipes]);
+
+  const handleAddRecipe = () => {
+    router.push('/add-recipe');
+  };
 
   const handleRecipePress = (recipe: Recipe) => {
     // Navigation vers l'écran de détail avec l'UUID de la recette
@@ -53,6 +58,10 @@ export default function RecipeListScreen() {
         <RecipeList 
           recipes={recipes || []}
           onRecipePress={handleRecipePress}
+        />
+        <FloatingActionButton
+          onPress={handleAddRecipe}
+          testID="add-recipe-button"
         />
       </View>
     </SafeAreaView>
