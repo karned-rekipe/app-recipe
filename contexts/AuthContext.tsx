@@ -173,7 +173,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
       });
       
       // Stocker les tokens de manière sécurisée
-      await secureStorageService.storeTokens(authResponse.tokens);
+      try {
+        await secureStorageService.storeTokens(authResponse.tokens);
+        console.log('✅ [AuthContext] Tokens stockés avec succès');
+      } catch (storageError) {
+        console.error('❌ [AuthContext] Erreur lors du stockage des tokens:', storageError);
+        // Cette erreur n'est pas critique pour la connexion, on continue
+      }
       
       // Optionnel : récupérer les infos utilisateur
       let user = authResponse.user;
@@ -282,7 +288,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
       const newTokens = await authApiService.refreshToken(state.tokens.refresh_token);
       
       // Mettre à jour le stockage sécurisé
-      await secureStorageService.storeTokens(newTokens);
+      try {
+        await secureStorageService.storeTokens(newTokens);
+        console.log('✅ [AuthContext] Nouveaux tokens stockés avec succès après refresh');
+      } catch (storageError) {
+        console.error('❌ [AuthContext] Erreur lors du stockage des nouveaux tokens:', storageError);
+        // Cette erreur n'est pas critique, on continue avec les tokens en mémoire
+      }
       
       dispatch({ type: 'UPDATE_TOKENS', payload: newTokens });
     } catch (error: any) {

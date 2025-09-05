@@ -52,6 +52,10 @@ const isSecureStoreAvailable = async (): Promise<boolean> => {
  * Chiffrement simple XOR + Base64 (identique à celui qui fonctionnait dans les tests)
  */
 const simpleEncrypt = (text: string): string => {
+  if (!text || typeof text !== 'string') {
+    throw new Error('simpleEncrypt: text doit être une chaîne de caractères non vide');
+  }
+  
   const key = 'rekipe2024';
   let encrypted = '';
   for (let i = 0; i < text.length; i++) {
@@ -62,6 +66,10 @@ const simpleEncrypt = (text: string): string => {
 };
 
 const simpleDecrypt = (encryptedBase64: string): string => {
+  if (!encryptedBase64 || typeof encryptedBase64 !== 'string') {
+    throw new Error('simpleDecrypt: encryptedBase64 doit être une chaîne de caractères non vide');
+  }
+  
   const key = 'rekipe2024';
   // Utiliser atob au lieu de Buffer
   const encrypted = atob(encryptedBase64);
@@ -78,9 +86,20 @@ class SecureStorageService {
    */
   async storeTokens(tokens: AuthTokens): Promise<void> {
     try {
+      // Validation des tokens avant stockage
+      if (!tokens || typeof tokens.access_token !== 'string' || typeof tokens.refresh_token !== 'string') {
+        throw new StorageError('Tokens invalides: access_token et refresh_token doivent être des chaînes de caractères');
+      }
+
+      if (!tokens.access_token.trim() || !tokens.refresh_token.trim()) {
+        throw new StorageError('Tokens vides: access_token et refresh_token ne peuvent pas être vides');
+      }
+
       console.log('🔐 [SecureStorage] Stockage des tokens', { 
         hasAccess: !!tokens.access_token,
-        hasRefresh: !!tokens.refresh_token 
+        hasRefresh: !!tokens.refresh_token,
+        accessLength: tokens.access_token.length,
+        refreshLength: tokens.refresh_token.length
       });
 
       // 1. Tentative SecureStore (recommandé)

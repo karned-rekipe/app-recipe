@@ -57,6 +57,16 @@ export class LicenseApiService {
    */
   async getUserLicenses(token: string): Promise<License[]> {
     console.log('🚀 [LicenseAPI] Début de getUserLicenses');
+    
+    // Validation du token
+    if (!token || typeof token !== 'string' || !token.trim()) {
+      throw new LicenseApiError(
+        'INVALID_TOKEN',
+        'Token d\'accès invalide ou manquant',
+        'Le token doit être une chaîne de caractères non vide'
+      );
+    }
+    
     console.log('🚀 [LicenseAPI] URL:', API_BASE_URL + '/mine');
     console.log('🚀 [LicenseAPI] Token:', token.substring(0, 20) + '...');
     

@@ -73,6 +73,26 @@ export class AuthApiService {
       // Il faut extraire les tokens du champ data.data
       const tokensData = data.data || data;
 
+      // Validation des tokens reçus
+      if (!tokensData.access_token || !tokensData.refresh_token) {
+        console.error('❌ [AuthAPI] Tokens manquants dans la réponse:', tokensData);
+        throw new AuthApiError(
+          'INVALID_RESPONSE',
+          'Réponse de l\'API invalide: tokens manquants'
+        );
+      }
+
+      if (typeof tokensData.access_token !== 'string' || typeof tokensData.refresh_token !== 'string') {
+        console.error('❌ [AuthAPI] Tokens invalides (pas des chaînes):', {
+          accessType: typeof tokensData.access_token,
+          refreshType: typeof tokensData.refresh_token
+        });
+        throw new AuthApiError(
+          'INVALID_RESPONSE',
+          'Réponse de l\'API invalide: tokens non conformes'
+        );
+      }
+
       const finalTokens = {
         tokens: {
           access_token: tokensData.access_token,
@@ -114,6 +134,14 @@ export class AuthApiService {
    */
   async refreshToken(refreshToken: string): Promise<AuthTokens> {
     try {
+      // Validation du refresh token
+      if (!refreshToken || typeof refreshToken !== 'string' || !refreshToken.trim()) {
+        throw new AuthApiError(
+          'INVALID_REFRESH_TOKEN',
+          'Refresh token invalide ou manquant'
+        );
+      }
+
       const response = await fetch(`${API_BASE_URL}${config.auth.refresh}`, {
         method: 'POST',
         headers: {
@@ -135,12 +163,29 @@ export class AuthApiService {
         );
       }
 
-      return {
+      // Validation des nouveaux tokens
+      if (!data.access_token || typeof data.access_token !== 'string') {
+        throw new AuthApiError(
+          'INVALID_RESPONSE',
+          'Nouveau access token invalide reçu de l\'API'
+        );
+      }
+
+      const newTokens: AuthTokens = {
         access_token: data.access_token,
         refresh_token: data.refresh_token || refreshToken, // Garder l'ancien si pas de nouveau
         token_type: data.token_type || 'bearer',
         expires_in: data.expires_in || 3600,
       };
+
+      console.log('🔄 [AuthAPI] Nouveaux tokens après refresh:', {
+        hasAccess: !!newTokens.access_token,
+        hasRefresh: !!newTokens.refresh_token,
+        accessLength: newTokens.access_token?.length || 0,
+        refreshLength: newTokens.refresh_token?.length || 0
+      });
+
+      return newTokens;
     } catch (error) {
       if (error instanceof AuthApiError) {
         throw error;
