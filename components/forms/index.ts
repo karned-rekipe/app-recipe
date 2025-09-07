@@ -18,4 +18,9 @@ export {
   StepItem as ControlledStepItem, 
   TagItem as ControlledTagItem 
 } from './ListItems';
+
+// Composants de sélection de pays
+export { CountrySelect } from './CountrySelect';
+export { ControlledCountrySelect } from './ControlledCountrySelect';
+
 export type { RecipeFormData } from './types';

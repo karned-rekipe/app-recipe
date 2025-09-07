@@ -27,6 +27,7 @@ import {
   ControlledIngredientItem,
   ControlledStepItem,
   ControlledTagItem,
+  ControlledCountrySelect,
   RecipeFormData
 } from './index';
 import { SimpleListManager } from './SimpleListManager';
@@ -158,7 +159,7 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
             styles.saveButton, 
             (isLoading || !isValid) && styles.disabledButton
           ]}>
-            Sauvegarder
+            Enregistrer
           </Text>
         </TouchableOpacity>
       </View>
@@ -170,7 +171,7 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
             <ControlledInput
               name="name"
               control={control}
-              label="Nom de la recette"
+              label=""
               placeholder="Recette"
               rules={{ required: 'Le nom de la recette est requis' }}
               required
@@ -179,13 +180,19 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
             <ControlledInput
               name="description"
               control={control}
-              label="Description"
-              placeholder="Décrivez votre recette..."
+              label=""
+              placeholder="Description"
               multiline
               numberOfLines={3}
               textAlignVertical="top"
-              rules={{ required: 'La description est requise' }}
               required
+            />
+
+            <ControlledCountrySelect
+              name="origin_country"
+              control={control}
+              label="Pays d'origine"
+              placeholder="Sélectionner un pays"
             />
 
             <View style={styles.row}>
@@ -193,8 +200,8 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
                 <ControlledInput
                   name="price"
                   control={control}
-                  label="Prix (€)"
-                  placeholder="15.50"
+                  label=""
+                  placeholder="Prix (€)"
                   keyboardType="numeric"
                   rules={{
                     pattern: {
@@ -208,8 +215,8 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
                 <ControlledInput
                   name="number_of_persons"
                   control={control}
-                  label="Nombre de personnes"
-                  placeholder="4"
+                  label=""
+                  placeholder="Nombre de personnes"
                   keyboardType="numeric"
                   rules={{
                     pattern: {
@@ -221,31 +228,19 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
               </View>
             </View>
 
-            <View style={styles.row}>
-              <View style={styles.flex1}>
-                <ControlledInput
-                  name="quantity"
-                  control={control}
-                  label="Quantité"
-                  placeholder="1"
-                  keyboardType="numeric"
-                  rules={{
-                    pattern: {
-                      value: /^\d+$/,
-                      message: 'Nombre entier requis'
-                    }
-                  }}
-                />
-              </View>
-              <View style={styles.flex1}>
-                <ControlledInput
-                  name="origin_country"
-                  control={control}
-                  label="Pays d'origine"
-                  placeholder="France"
-                />
-              </View>
-            </View>
+            <ControlledInput
+              name="quantity"
+              control={control}
+              label=""
+              placeholder="Quantité"
+              keyboardType="numeric"
+              rules={{
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Nombre entier requis'
+                }
+              }}
+            />
 
             <ControlledInput
               name="source_reference"

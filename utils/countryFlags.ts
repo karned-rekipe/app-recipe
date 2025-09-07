@@ -80,3 +80,11 @@ export const formatCountryWithFlag = (country: string | null): string => {
   
   return `${countryInfo.flag} ${countryInfo.name}`;
 };
+
+/**
+ * Obtient la liste de tous les pays disponibles
+ * @returns Un tableau des noms de pays
+ */
+export const getAllCountries = (): string[] => {
+  return Object.keys(countryFlags);
+};
