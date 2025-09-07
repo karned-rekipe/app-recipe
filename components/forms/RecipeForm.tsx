@@ -199,13 +199,11 @@ export function RecipeForm({ initialData, onSave, onCancel, isLoading = false }:
         <View style={styles.form}>
           {/* Informations de base */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Informations générales</Text>
-            
             <FormInput
               label="Nom de la recette"
               value={formData.name}
               onChangeText={(value) => updateFormData('name', value)}
-              placeholder="Ex: Ratatouille, Tarte aux pommes..."
+              placeholder="Recette"
               error={errors.name}
               required
             />

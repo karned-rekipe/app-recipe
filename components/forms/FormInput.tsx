@@ -14,7 +14,7 @@ import {
 import { theme } from '../../constants/theme';
 
 interface FormInputProps extends Omit<TextInputProps, 'style'> {
-  label: string;
+  label?: string;
   error?: string;
   required?: boolean;
   testID?: string;

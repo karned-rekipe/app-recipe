@@ -1,5 +1,6 @@
 /**
- * Écran pour ajouter une nouvelle recette
+ * Exemple d'utilisation du nouveau formulaire de recette avec React Hook Form
+ * Remplacez simplement RecipeForm par ModernRecipeForm dans add-recipe.tsx
  */
 
 import React from 'react';
@@ -8,13 +9,15 @@ import { router } from 'expo-router';
 import { ModernRecipeForm, RecipeFormData } from '../components/forms';
 import { theme } from '../constants/theme';
 
-export default function AddRecipeScreen() {
+export default function AddRecipeScreenModern() {
   const handleSave = (recipeData: RecipeFormData) => {
     // TODO: Implémenter l'enregistrement de la recette
     console.log('Nouvelle recette:', recipeData);
     
-    // Pour le moment, on simule la sauvegarde et on retourne à la liste
-    // Plus tard, vous pourrez intégrer l'API ici
+    // Ici vous pourrez intégrer l'API pour sauvegarder la recette
+    // Example:
+    // await recipeApiService.createRecipe(recipeData);
+    
     router.back();
   };
 
