@@ -28,7 +28,9 @@ import {
   ControlledStepItem,
   ControlledTagItem,
   ControlledCountrySelect,
-  RecipeFormData
+  ControlledPriceSelector,
+  RecipeFormData,
+  PriceValue
 } from './index';
 import { SimpleListManager } from './SimpleListManager';
 
@@ -58,7 +60,7 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
     defaultValues: {
       name: initialData?.name || '',
       description: initialData?.description || '',
-      price: initialData?.price?.toString() || '',
+      price: (initialData?.price as PriceValue) || 1,
       quantity: initialData?.quantity?.toString() || '',
       number_of_persons: initialData?.number_of_persons?.toString() || '',
       origin_country: initialData?.origin_country || '',
@@ -191,26 +193,16 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
             <ControlledCountrySelect
               name="origin_country"
               control={control}
-              label="Pays d'origine"
-              placeholder="Sélectionner un pays"
+              placeholder="Pays d'origine"
+            />
+
+            <ControlledPriceSelector
+              name="price"
+              control={control}
+              rules={{ required: 'Veuillez sélectionner un niveau de prix' }}
             />
 
             <View style={styles.row}>
-              <View style={styles.flex1}>
-                <ControlledInput
-                  name="price"
-                  control={control}
-                  label=""
-                  placeholder="Prix (€)"
-                  keyboardType="numeric"
-                  rules={{
-                    pattern: {
-                      value: /^\d+(\.\d{1,2})?$/,
-                      message: 'Format invalide (ex: 15.50)'
-                    }
-                  }}
-                />
-              </View>
               <View style={styles.flex1}>
                 <ControlledInput
                   name="number_of_persons"
@@ -226,21 +218,22 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
                   }}
                 />
               </View>
+              <View style={styles.flex1}>
+                <ControlledInput
+                  name="quantity"
+                  control={control}
+                  label=""
+                  placeholder="Quantité"
+                  keyboardType="numeric"
+                  rules={{
+                    pattern: {
+                      value: /^\d+$/,
+                      message: 'Nombre entier requis'
+                    }
+                  }}
+                />
+              </View>
             </View>
-
-            <ControlledInput
-              name="quantity"
-              control={control}
-              label=""
-              placeholder="Quantité"
-              keyboardType="numeric"
-              rules={{
-                pattern: {
-                  value: /^\d+$/,
-                  message: 'Nombre entier requis'
-                }
-              }}
-            />
 
             <ControlledInput
               name="source_reference"

@@ -23,4 +23,9 @@ export {
 export { CountrySelect } from './CountrySelect';
 export { ControlledCountrySelect } from './ControlledCountrySelect';
 
+// Composants de sélection de prix
+export { PriceSelector } from './PriceSelector';
+export { ControlledPriceSelector } from './ControlledPriceSelector';
+export type { PriceValue } from './PriceSelector';
+
 export type { RecipeFormData } from './types';

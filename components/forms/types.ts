@@ -3,11 +3,12 @@
  */
 
 import { Ingredient, Step } from '../../types/Recipe';
+import { PriceValue } from './PriceSelector';
 
 export interface RecipeFormData {
   name: string;
   description: string;
-  price: string;
+  price: PriceValue;
   quantity: string;
   number_of_persons: string;
   origin_country: string;
