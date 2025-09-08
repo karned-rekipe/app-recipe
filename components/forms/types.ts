@@ -4,11 +4,13 @@
 
 import { Ingredient, Step } from '../../types/Recipe';
 import { PriceValue } from './PriceSelector';
+import { DifficultyValue } from './DifficultySelector';
 
 export interface RecipeFormData {
   name: string;
   description: string;
   price: PriceValue;
+  difficulty: DifficultyValue;
   quantity: number;
   number_of_persons: number;
   origin_country: string;

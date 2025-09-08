@@ -17,6 +17,7 @@ export interface Recipe {
   name: string;
   description: string | null;
   price: number | null;
+  difficulty: number | null;
   quantity: number | null;
   number_of_persons: number | null;
   origin_country: string | null;

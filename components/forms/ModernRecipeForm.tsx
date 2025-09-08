@@ -29,10 +29,12 @@ import {
   ControlledTagItem,
   ControlledCountrySelect,
   ControlledPriceSelector,
+  ControlledDifficultySelector,
   ControlledPersonCountSelector,
   ControlledQuantitySelector,
   RecipeFormData,
-  PriceValue
+  PriceValue,
+  DifficultyValue
 } from './index';
 import { SimpleListManager } from './SimpleListManager';
 
@@ -63,6 +65,7 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
       name: initialData?.name || '',
       description: initialData?.description || '',
       price: (initialData?.price as PriceValue) || 1,
+      difficulty: (initialData?.difficulty as DifficultyValue) || 1,
       quantity: initialData?.quantity || 1,
       number_of_persons: initialData?.number_of_persons || 4,
       origin_country: initialData?.origin_country || '',
@@ -202,6 +205,12 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
               name="price"
               control={control}
               rules={{ required: 'Veuillez sélectionner un niveau de prix' }}
+            />
+
+            <ControlledDifficultySelector
+              name="difficulty"
+              control={control}
+              rules={{ required: 'Veuillez sélectionner un niveau de difficulté' }}
             />
 
             <View style={styles.row}>

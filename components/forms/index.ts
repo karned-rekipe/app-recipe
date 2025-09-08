@@ -28,6 +28,11 @@ export { PriceSelector } from './PriceSelector';
 export { ControlledPriceSelector } from './ControlledPriceSelector';
 export type { PriceValue } from './PriceSelector';
 
+// Composants de sélection de difficulté
+export { DifficultySelector } from './DifficultySelector';
+export { ControlledDifficultySelector } from './ControlledDifficultySelector';
+export type { DifficultyValue } from './DifficultySelector';
+
 // Composants de compteurs
 export { CounterSelector } from './CounterSelector';
 export { PersonCountSelector } from './PersonCountSelector';
