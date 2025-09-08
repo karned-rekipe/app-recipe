@@ -28,4 +28,11 @@ export { PriceSelector } from './PriceSelector';
 export { ControlledPriceSelector } from './ControlledPriceSelector';
 export type { PriceValue } from './PriceSelector';
 
+// Composants de compteurs
+export { CounterSelector } from './CounterSelector';
+export { PersonCountSelector } from './PersonCountSelector';
+export { QuantitySelector } from './QuantitySelector';
+export { ControlledPersonCountSelector } from './ControlledPersonCountSelector';
+export { ControlledQuantitySelector } from './ControlledQuantitySelector';
+
 export type { RecipeFormData } from './types';

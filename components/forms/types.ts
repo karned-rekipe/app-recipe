@@ -9,8 +9,8 @@ export interface RecipeFormData {
   name: string;
   description: string;
   price: PriceValue;
-  quantity: string;
-  number_of_persons: string;
+  quantity: number;
+  number_of_persons: number;
   origin_country: string;
   attributes: string[];
   utensils: string[];

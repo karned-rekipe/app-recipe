@@ -29,6 +29,8 @@ import {
   ControlledTagItem,
   ControlledCountrySelect,
   ControlledPriceSelector,
+  ControlledPersonCountSelector,
+  ControlledQuantitySelector,
   RecipeFormData,
   PriceValue
 } from './index';
@@ -61,8 +63,8 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
       name: initialData?.name || '',
       description: initialData?.description || '',
       price: (initialData?.price as PriceValue) || 1,
-      quantity: initialData?.quantity?.toString() || '',
-      number_of_persons: initialData?.number_of_persons?.toString() || '',
+      quantity: initialData?.quantity || 1,
+      number_of_persons: initialData?.number_of_persons || 4,
       origin_country: initialData?.origin_country || '',
       attributes: initialData?.attributes || [],
       utensils: initialData?.utensils || [],
@@ -204,33 +206,33 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
 
             <View style={styles.row}>
               <View style={styles.flex1}>
-                <ControlledInput
+                <ControlledPersonCountSelector
                   name="number_of_persons"
                   control={control}
-                  label=""
-                  placeholder="Nombre de personnes"
-                  keyboardType="numeric"
-                  rules={{
-                    pattern: {
-                      value: /^\d+$/,
-                      message: 'Nombre entier requis'
-                    }
+                  rules={{ 
+                    required: 'Le nombre de personnes est requis',
+                    min: { value: 1, message: 'Minimum 1 personne' },
+                    max: { value: 20, message: 'Maximum 20 personnes' }
                   }}
+                  minCount={1}
+                  maxCount={20}
                 />
               </View>
+            </View>
+
+            <View style={styles.row}>
               <View style={styles.flex1}>
-                <ControlledInput
+                <ControlledQuantitySelector
                   name="quantity"
                   control={control}
-                  label=""
-                  placeholder="Quantité"
-                  keyboardType="numeric"
-                  rules={{
-                    pattern: {
-                      value: /^\d+$/,
-                      message: 'Nombre entier requis'
-                    }
+                  rules={{ 
+                    required: 'La quantité est requise',
+                    min: { value: 1, message: 'Minimum 1 part' },
+                    max: { value: 99, message: 'Maximum 99 parts' }
                   }}
+                  minQuantity={1}
+                  maxQuantity={99}
+                  unit="parts"
                 />
               </View>
             </View>
