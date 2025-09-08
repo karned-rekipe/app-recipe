@@ -16,7 +16,7 @@ interface PriceSelectorProps {
   error?: string;
 }
 
-const PRICE_OPTIONS: Array<{ value: PriceValue; display: string; label: string }> = [
+const PRICE_OPTIONS: { value: PriceValue; display: string; label: string }[] = [
   { value: 1, display: '€', label: 'Économique' },
   { value: 2, display: '€€', label: 'Modéré' },
   { value: 3, display: '€€€', label: 'Élevé' },

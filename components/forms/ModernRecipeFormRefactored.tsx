@@ -1,5 +1,6 @@
 /**
- * Formulaire de recette moderne utilisant React Hook Form
+ * Formulaire de recette moderne refactorisé
+ * Utilise les principes SRP et la composition pour une meilleure maintenabilité
  */
 
 import React, { useState } from 'react';
@@ -18,15 +19,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 import { Recipe, Ingredient, Step } from '../../types/Recipe';
 
+// Imports des nouveaux composants
+import { UniversalListManager } from './UniversalListManager';
+import { ModernIngredientModal } from './ModernIngredientModal';
+import { ModernStepModal } from './ModernStepModal';
+import { ModernTagModal } from './ModernTagModal';
+import { IngredientDisplay, StepDisplay, TagDisplay } from './DisplayComponents';
+import { useModalState } from './useModalState';
+
+// Imports des composants existants
 import { 
   ControlledInput,
-  ControlledListManager,
-  ControlledIngredientModal,
-  ControlledStepModal,
-  ControlledTagModal,
-  ControlledIngredientItem,
-  ControlledStepItem,
-  ControlledTagItem,
   ControlledCountrySelect,
   ControlledPriceSelector,
   ControlledDifficultySelector,
@@ -36,21 +39,20 @@ import {
   PriceValue,
   DifficultyValue
 } from './index';
-import { SimpleListManager } from './SimpleListManager';
 
-interface RecipeFormProps {
+interface ModernRecipeFormProps {
   initialData?: Partial<Recipe>;
   onSave: (data: RecipeFormData) => void;
   onCancel: () => void;
   isLoading?: boolean;
 }
 
-export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = false }: RecipeFormProps) {
-  // États des modales
-  const [showIngredientModal, setShowIngredientModal] = useState(false);
-  const [showStepModal, setShowStepModal] = useState(false);
-  const [showAttributeModal, setShowAttributeModal] = useState(false);
-  const [showUtensilModal, setShowUtensilModal] = useState(false);
+export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = false }: ModernRecipeFormProps) {
+  // États des modales avec le nouveau hook
+  const ingredientModal = useModalState<Ingredient>();
+  const stepModal = useModalState<Step>();
+  const attributeModal = useModalState<string>();
+  const utensilModal = useModalState<string>();
 
   // Configuration du formulaire avec React Hook Form
   const {
@@ -98,9 +100,15 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
     name: 'steps'
   });
 
-  // Surveillance des valeurs pour les attributs et ustensiles
-  const attributes = useWatch({ control, name: 'attributes' }) || [];
-  const utensils = useWatch({ control, name: 'utensils' }) || [];
+  const attributesArray = useFieldArray({
+    control,
+    name: 'attributes'
+  });
+
+  const utensilsArray = useFieldArray({
+    control,
+    name: 'utensils'
+  });
 
   const onSubmit: SubmitHandler<RecipeFormData> = (data) => {
     onSave(data);
@@ -121,28 +129,57 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
     }
   };
 
-  // Gestion des tableaux avec setValue (alternative plus simple)
+  // Gestionnaires pour les ingrédients
   const handleAddIngredient = (ingredient: Omit<Ingredient, 'created_by'>) => {
     ingredientsArray.append(ingredient);
-    setShowIngredientModal(false);
+    ingredientModal.closeModal();
   };
 
+  const handleEditIngredient = (ingredient: Omit<Ingredient, 'created_by'>) => {
+    if (ingredientModal.index !== undefined) {
+      ingredientsArray.update(ingredientModal.index, ingredient);
+    }
+    ingredientModal.closeModal();
+  };
+
+  // Gestionnaires pour les étapes
   const handleAddStep = (step: Omit<Step, 'created_by'>) => {
     const newStep = { ...step, step_number: stepsArray.fields.length + 1 };
     stepsArray.append(newStep);
-    setShowStepModal(false);
+    stepModal.closeModal();
   };
 
+  const handleEditStep = (step: Omit<Step, 'created_by'>) => {
+    if (stepModal.index !== undefined) {
+      stepsArray.update(stepModal.index, step);
+    }
+    stepModal.closeModal();
+  };
+
+  // Gestionnaires pour les attributs
   const handleAddAttribute = (attribute: string) => {
-    const currentAttributes = attributes || [];
-    setValue('attributes', [...currentAttributes, attribute]);
-    setShowAttributeModal(false);
+    attributesArray.append(attribute);
+    attributeModal.closeModal();
   };
 
+  const handleEditAttribute = (attribute: string) => {
+    if (attributeModal.index !== undefined) {
+      attributesArray.update(attributeModal.index, attribute);
+    }
+    attributeModal.closeModal();
+  };
+
+  // Gestionnaires pour les ustensiles
   const handleAddUtensil = (utensil: string) => {
-    const currentUtensils = utensils || [];
-    setValue('utensils', [...currentUtensils, utensil]);
-    setShowUtensilModal(false);
+    utensilsArray.append(utensil);
+    utensilModal.closeModal();
+  };
+
+  const handleEditUtensil = (utensil: string) => {
+    if (utensilModal.index !== undefined) {
+      utensilsArray.update(utensilModal.index, utensil);
+    }
+    utensilModal.closeModal();
   };
 
   return (
@@ -251,68 +288,91 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
                 />
               </View>
             </View>
-
           </View>
 
           {/* Ingrédients */}
           <View style={styles.section}>
-            <ControlledListManager
+            <UniversalListManager
               name="ingredients"
               control={control}
               title="Ingrédients"
-              renderItem={(ingredient, index) => (
-                <ControlledIngredientItem ingredient={ingredient} index={index} />
+              renderItem={(ingredient, index, onEdit) => (
+                <IngredientDisplay 
+                  ingredient={ingredient} 
+                  onEdit={onEdit}
+                  allowEdit={true}
+                />
               )}
-              onAddItem={() => setShowIngredientModal(true)}
+              onAddItem={ingredientModal.openAddModal}
+              onEditItem={(ingredient, index) => ingredientModal.openEditModal(ingredient, index)}
               addButtonText="Ajouter un ingrédient"
               emptyStateText="Aucun ingrédient ajouté"
               error={errors.ingredients?.message}
+              allowEdit={true}
             />
           </View>
 
           {/* Étapes */}
           <View style={styles.section}>
-            <ControlledListManager
+            <UniversalListManager
               name="steps"
               control={control}
               title="Étapes de préparation"
-              renderItem={(step, index) => (
-                <ControlledStepItem step={step} index={index} />
+              renderItem={(step, index, onEdit) => (
+                <StepDisplay 
+                  step={step} 
+                  onEdit={onEdit}
+                  allowEdit={true}
+                />
               )}
-              onAddItem={() => setShowStepModal(true)}
+              onAddItem={stepModal.openAddModal}
+              onEditItem={(step, index) => stepModal.openEditModal(step, index)}
               addButtonText="Ajouter une étape"
               emptyStateText="Aucune étape ajoutée"
               error={errors.steps?.message}
+              allowEdit={true}
             />
           </View>
 
           {/* Attributs */}
           <View style={styles.section}>
-            <SimpleListManager
+            <UniversalListManager
+              name="attributes"
+              control={control}
               title="Attributs (végétarien, sans gluten...)"
-              items={attributes}
-              onItemsChange={(items) => setValue('attributes', items)}
-              renderItem={(attribute, index) => (
-                <ControlledTagItem tag={attribute} index={index} />
+              renderItem={(attribute, index, onEdit) => (
+                <TagDisplay 
+                  tag={attribute} 
+                  onEdit={onEdit}
+                  allowEdit={true}
+                />
               )}
-              onAddItem={() => setShowAttributeModal(true)}
+              onAddItem={attributeModal.openAddModal}
+              onEditItem={(attribute, index) => attributeModal.openEditModal(attribute, index)}
               addButtonText="Ajouter un attribut"
               emptyStateText="Aucun attribut ajouté"
+              allowEdit={true}
             />
           </View>
 
           {/* Ustensiles */}
           <View style={styles.section}>
-            <SimpleListManager
+            <UniversalListManager
+              name="utensils"
+              control={control}
               title="Ustensiles nécessaires"
-              items={utensils}
-              onItemsChange={(items) => setValue('utensils', items)}
-              renderItem={(utensil, index) => (
-                <ControlledTagItem tag={utensil} index={index} />
+              renderItem={(utensil, index, onEdit) => (
+                <TagDisplay 
+                  tag={utensil} 
+                  onEdit={onEdit}
+                  allowEdit={true}
+                />
               )}
-              onAddItem={() => setShowUtensilModal(true)}
+              onAddItem={utensilModal.openAddModal}
+              onEditItem={(utensil, index) => utensilModal.openEditModal(utensil, index)}
               addButtonText="Ajouter un ustensile"
               emptyStateText="Aucun ustensile ajouté"
+              allowEdit={true}
             />
           </View>
 
@@ -355,33 +415,41 @@ export function ModernRecipeForm({ initialData, onSave, onCancel, isLoading = fa
       </ScrollView>
 
       {/* Modales */}
-      <ControlledIngredientModal
-        visible={showIngredientModal}
-        onSave={handleAddIngredient}
-        onCancel={() => setShowIngredientModal(false)}
+      <ModernIngredientModal
+        visible={ingredientModal.isVisible}
+        onSave={ingredientModal.isEditMode ? handleEditIngredient : handleAddIngredient}
+        onCancel={ingredientModal.closeModal}
+        initialData={ingredientModal.data}
+        mode={ingredientModal.modalState.mode}
       />
 
-      <ControlledStepModal
-        visible={showStepModal}
-        stepNumber={stepsArray.fields.length + 1}
-        onSave={handleAddStep}
-        onCancel={() => setShowStepModal(false)}
+      <ModernStepModal
+        visible={stepModal.isVisible}
+        stepNumber={stepModal.isEditMode ? stepModal.data?.step_number || 1 : stepsArray.fields.length + 1}
+        onSave={stepModal.isEditMode ? handleEditStep : handleAddStep}
+        onCancel={stepModal.closeModal}
+        initialData={stepModal.data}
+        mode={stepModal.modalState.mode}
       />
 
-      <ControlledTagModal
-        visible={showAttributeModal}
-        onSave={handleAddAttribute}
-        onCancel={() => setShowAttributeModal(false)}
-        title="Ajouter un attribut"
+      <ModernTagModal
+        visible={attributeModal.isVisible}
+        onSave={attributeModal.isEditMode ? handleEditAttribute : handleAddAttribute}
+        onCancel={attributeModal.closeModal}
+        title={attributeModal.isEditMode ? "Modifier l'attribut" : "Ajouter un attribut"}
         placeholder="Ex: Végétarien, Sans gluten, Épicé..."
+        initialData={attributeModal.data}
+        mode={attributeModal.modalState.mode}
       />
 
-      <ControlledTagModal
-        visible={showUtensilModal}
-        onSave={handleAddUtensil}
-        onCancel={() => setShowUtensilModal(false)}
-        title="Ajouter un ustensile"
+      <ModernTagModal
+        visible={utensilModal.isVisible}
+        onSave={utensilModal.isEditMode ? handleEditUtensil : handleAddUtensil}
+        onCancel={utensilModal.closeModal}
+        title={utensilModal.isEditMode ? "Modifier l'ustensile" : "Ajouter un ustensile"}
         placeholder="Ex: Four, Mixeur, Casserole..."
+        initialData={utensilModal.data}
+        mode={utensilModal.modalState.mode}
       />
     </KeyboardAvoidingView>
   );

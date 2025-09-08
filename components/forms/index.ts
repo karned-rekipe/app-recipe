@@ -19,6 +19,20 @@ export {
   TagItem as ControlledTagItem 
 } from './ListItems';
 
+// Nouveaux composants modernes basés sur la composition et le SRP
+export { BaseModal } from './BaseModal';
+export { ModernIngredientModal } from './ModernIngredientModal';
+export { ModernStepModal } from './ModernStepModal';
+export { ModernTagModal } from './ModernTagModal';
+export { IngredientDisplay, StepDisplay, TagDisplay, IngredientInlineDisplay } from './DisplayComponents';
+export { IngredientListManager, StepListManager, InlineIngredientListManager } from './SpecializedListManagers';
+export { SimpleTagListManager } from './SimpleTagListManager';
+export { SuperModernRecipeForm } from './SuperModernRecipeForm';
+
+// Hooks personnalisés
+export { useModalForm } from './useModalForm';
+export { useModalState } from './useModalState';
+
 // Composants de sélection de pays
 export { CountrySelect } from './CountrySelect';
 export { ControlledCountrySelect } from './ControlledCountrySelect';

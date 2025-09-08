@@ -3,7 +3,7 @@
  * Utilise la composition avec BaseModal et useModalForm
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { theme } from '../../constants/theme';
 import { ControlledInput } from './ControlledInput';
@@ -17,7 +17,7 @@ interface IngredientFormData {
   unit: string;
 }
 
-interface ControlledIngredientModalProps {
+interface ModernIngredientModalProps {
   visible: boolean;
   onSave: (ingredient: Omit<Ingredient, 'created_by'>) => void;
   onCancel: () => void;
@@ -25,19 +25,20 @@ interface ControlledIngredientModalProps {
   mode?: 'add' | 'edit';
 }
 
-export function ControlledIngredientModal({
+export function ModernIngredientModal({
   visible,
   onSave,
   onCancel,
   initialData,
   mode = 'add',
-}: ControlledIngredientModalProps) {
+}: ModernIngredientModalProps) {
   const {
     control,
     errors,
     isValid,
     onSubmit,
     handleCancel,
+    reset,
   } = useModalForm<IngredientFormData>({
     defaultValues: {
       name: initialData?.name || '',
@@ -53,6 +54,25 @@ export function ControlledIngredientModal({
     },
     onCancel,
   });
+
+  // Reset le formulaire avec les bonnes valeurs quand la modale s'ouvre
+  useEffect(() => {
+    if (visible) {
+      if (mode === 'edit' && initialData) {
+        reset({
+          name: initialData.name,
+          quantity: initialData.quantity,
+          unit: initialData.unit,
+        });
+      } else if (mode === 'add') {
+        reset({
+          name: '',
+          quantity: 0,
+          unit: '',
+        });
+      }
+    }
+  }, [visible, mode, initialData, reset]);
 
   return (
     <BaseModal

@@ -5,7 +5,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { ModernRecipeForm, RecipeFormData } from '../components/forms';
+import { SuperModernRecipeForm, RecipeFormData } from '../components/forms';
 import { theme } from '../constants/theme';
 
 export default function AddRecipeScreen() {
@@ -24,7 +24,7 @@ export default function AddRecipeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ModernRecipeForm
+      <SuperModernRecipeForm
         onSave={handleSave}
         onCancel={handleCancel}
       />

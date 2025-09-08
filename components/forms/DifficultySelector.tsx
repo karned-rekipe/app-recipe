@@ -16,7 +16,7 @@ interface DifficultySelectorProps {
   error?: string;
 }
 
-const DIFFICULTY_OPTIONS: Array<{ value: DifficultyValue; display: string; label: string }> = [
+const DIFFICULTY_OPTIONS: { value: DifficultyValue; display: string; label: string }[] = [
   { value: 1, display: '👨‍🍳', label: 'Facile' },
   { value: 2, display: '👨‍🍳👨‍🍳', label: 'Moyen' },
   { value: 3, display: '👨‍🍳👨‍🍳👨‍🍳', label: 'Difficile' },
