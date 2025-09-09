@@ -23,10 +23,11 @@ import { Recipe, Ingredient, Step } from '../../types/Recipe';
 import { IngredientListManager, StepListManager } from './SpecializedListManagers';
 import { SimpleTagListManager } from './SimpleTagListManager';
 import { ModernIngredientModal } from './ModernIngredientModal';
-import { ModernStepModal } from './ModernStepModal';
+import { ControlledStepModalV2 } from './ControlledStepModalV2';
 import { ModernTagModal } from './ModernTagModal';
 import { IngredientDisplay, StepDisplay, TagDisplay } from './DisplayComponents';
 import { useModalState } from './useModalState';
+import { NumberSelector } from '../NumberSelector';
 
 // Imports des composants existants
 import { 
@@ -34,8 +35,7 @@ import {
   ControlledCountrySelect,
   ControlledPriceSelector,
   ControlledDifficultySelector,
-  ControlledPersonCountSelector,
-  ControlledQuantitySelector,
+  ControlledNumberSelector,
   RecipeFormData,
   PriceValue,
   DifficultyValue
@@ -83,8 +83,12 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
       })) || [],
       steps: initialData?.steps?.map(step => ({
         step_number: step.step_number,
+        title: step.title || '',
         description: step.description,
-        duration: step.duration
+        total_duration: step.total_duration || 0,
+        cooking_duration: step.cooking_duration || 0,
+        rest_duration: step.rest_duration || 0,
+        preparation_duration: step.preparation_duration || 0,
       })) || [],
       thumbnail_url: initialData?.thumbnail_url || '',
       large_image_url: initialData?.large_image_url || '',
@@ -102,6 +106,31 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
     control,
     name: 'steps'
   });
+
+  // Renuméroter automatiquement les étapes quand leur nombre change
+  React.useEffect(() => {
+    const steps = stepsArray.fields;
+    let needsUpdate = false;
+    
+    steps.forEach((step, index) => {
+      const stepData = step as Omit<Step, 'created_by'>;
+      if (stepData.step_number !== index + 1) {
+        needsUpdate = true;
+      }
+    });
+
+    if (needsUpdate) {
+      steps.forEach((step, index) => {
+        const stepData = step as Omit<Step, 'created_by'>;
+        if (stepData.step_number !== index + 1) {
+          stepsArray.update(index, {
+            ...stepData,
+            step_number: index + 1
+          });
+        }
+      });
+    }
+  }, [stepsArray.fields.length]); // Se déclenche quand le nombre d'étapes change
 
   const onSubmit: SubmitHandler<RecipeFormData> = (data) => {
     onSave(data);
@@ -158,6 +187,18 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
   const handleEditStep = (step: Omit<Step, 'created_by'>) => {
     if (stepModal.index !== undefined) {
       stepsArray.update(stepModal.index, step);
+    }
+    stepModal.closeModal();
+  };
+
+  // Fonction pour supprimer une étape - la renumérotation est automatique via useEffect
+  const handleRemoveStep = (index: number) => {
+    stepsArray.remove(index);
+  };
+
+  const handleDeleteStep = () => {
+    if (stepModal.index !== undefined) {
+      handleRemoveStep(stepModal.index);
     }
     stepModal.closeModal();
   };
@@ -270,35 +311,27 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
               rules={{ required: 'Veuillez sélectionner un niveau de difficulté' }}
             />
 
-            <View style={styles.row}>
-              <View style={styles.flex1}>
-                <ControlledPersonCountSelector
+            {/* Nombre de personnes et quantité de parts - regroupés avec espacement réduit */}
+            <View style={styles.section}>
+              <View style={styles.quantityContainer}>
+                <ControlledNumberSelector
                   name="number_of_persons"
                   control={control}
-                  rules={{ 
-                    required: 'Le nombre de personnes est requis',
-                    min: { value: 1, message: 'Minimum 1 personne' },
-                    max: { value: 20, message: 'Maximum 20 personnes' }
-                  }}
-                  minCount={1}
-                  maxCount={20}
+                  label=""
+                  suffix="personne(s)"
+                  minValue={1}
+                  maxValue={100}
+                  size="large"
                 />
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={styles.flex1}>
-                <ControlledQuantitySelector
+                
+                <ControlledNumberSelector
                   name="quantity"
                   control={control}
-                  rules={{ 
-                    required: 'La quantité est requise',
-                    min: { value: 1, message: 'Minimum 1 part' },
-                    max: { value: 99, message: 'Maximum 99 parts' }
-                  }}
-                  minQuantity={1}
-                  maxQuantity={99}
-                  unit="parts"
+                  label=""
+                  suffix="part(s)"
+                  minValue={1}
+                  maxValue={1000}
+                  size="medium"
                 />
               </View>
             </View>
@@ -312,11 +345,19 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
                   Ingrédients ({ingredientsArray.fields.length})
                 </Text>
                 <TouchableOpacity 
-                  style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.colors.primary, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16 }}
+                  style={{ 
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: theme.colors.background.white,
+                    borderWidth: 2,
+                    borderColor: theme.colors.primary,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
                   onPress={ingredientModal.openAddModal}
                 >
-                  <Ionicons name="add" size={16} color="white" />
-                  <Text style={{ marginLeft: 4, color: 'white', fontWeight: '500', fontSize: 12 }}>Ajouter</Text>
+                  <Ionicons name="add" size={24} color={theme.colors.primary} />
                 </TouchableOpacity>
               </View>
 
@@ -432,16 +473,9 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
           <View style={styles.section}>
             <StepListManager
               fields={stepsArray.fields}
-              renderItem={(step, index, onEdit) => (
-                <StepDisplay 
-                  step={step} 
-                  onEdit={onEdit}
-                  allowEdit={true}
-                />
-              )}
               onAddItem={stepModal.openAddModal}
               onEditItem={(step, index) => stepModal.openEditModal(step, index)}
-              onRemoveItem={stepsArray.remove}
+              onRemoveItem={handleRemoveStep}
               error={errors.steps?.message}
             />
           </View>
@@ -452,7 +486,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
               control={control}
               setValue={setValue}
               fieldName="attributes"
-              title="Attributs (végétarien, sans gluten...)"
+              title="Attributs (sans gluten...)"
               addButtonText="Ajouter un attribut"
               emptyStateText="Aucun attribut ajouté"
               renderItem={(attribute, index, onEdit) => (
@@ -473,7 +507,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
               control={control}
               setValue={setValue}
               fieldName="utensils"
-              title="Ustensiles nécessaires"
+              title="Ustensiles"
               addButtonText="Ajouter un ustensile"
               emptyStateText="Aucun ustensile ajouté"
               renderItem={(utensil, index, onEdit) => (
@@ -535,11 +569,12 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
         mode={ingredientModal.modalState.mode}
       />
 
-      <ModernStepModal
+      <ControlledStepModalV2
         visible={stepModal.isVisible}
         stepNumber={stepModal.isEditMode ? stepModal.data?.step_number || 1 : stepsArray.fields.length + 1}
         onSave={stepModal.isEditMode ? handleEditStep : handleAddStep}
         onCancel={stepModal.closeModal}
+        onDelete={stepModal.isEditMode ? handleDeleteStep : undefined}
         initialData={stepModal.data}
         mode={stepModal.modalState.mode}
       />
@@ -606,6 +641,9 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: theme.spacing.xl,
+  },
+  quantityContainer: {
+    gap: theme.spacing.sm,
   },
   sectionTitle: {
     fontSize: 20,

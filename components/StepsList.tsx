@@ -40,18 +40,21 @@ export const StepItem: React.FC<StepItemProps> = ({
         <Text style={styles.stepNumberText}>{step.step_number}</Text>
       </View>
       <View style={styles.stepContent}>
+        <Text style={styles.stepTitle}>
+          {step.title}
+        </Text>
         <Text style={[
           styles.stepDescription,
           checked && styles.stepDescriptionChecked
         ]}>
           {step.description}
         </Text>
-        {step.duration ? (
+        {step.total_duration > 0 ? (
           <Text style={[
             styles.stepDuration,
             checked && styles.stepDurationChecked
           ]}>
-            ⏱️ {step.duration}
+            ⏱️ {step.total_duration} min
           </Text>
         ) : null}
       </View>
@@ -171,6 +174,12 @@ const styles = StyleSheet.create({
   },
   stepContent: {
     flex: 1,
+  },
+  stepTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.text.primary,
+    marginBottom: 4,
   },
   stepDescription: {
     fontSize: 14,

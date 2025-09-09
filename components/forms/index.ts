@@ -11,6 +11,7 @@ export { ControlledListManager } from './ControlledListManager';
 export { SimpleListManager } from './SimpleListManager';
 export { ControlledIngredientModal } from './ControlledIngredientModal';
 export { ControlledStepModal } from './ControlledStepModal';
+export { ControlledStepModalV2 } from './ControlledStepModalV2';
 export { ControlledTagModal } from './ControlledTagModal';
 export { ModernRecipeForm } from './ModernRecipeForm';
 export { 
@@ -33,19 +34,16 @@ export { SuperModernRecipeForm } from './SuperModernRecipeForm';
 export { useModalForm } from './useModalForm';
 export { useModalState } from './useModalState';
 
-// Composants de sélection de pays
+// Composants de sélection
 export { CountrySelect } from './CountrySelect';
 export { ControlledCountrySelect } from './ControlledCountrySelect';
-
-// Composants de sélection de prix
 export { PriceSelector } from './PriceSelector';
 export { ControlledPriceSelector } from './ControlledPriceSelector';
-export type { PriceValue } from './PriceSelector';
-
-// Composants de sélection de difficulté
 export { DifficultySelector } from './DifficultySelector';
 export { ControlledDifficultySelector } from './ControlledDifficultySelector';
-export type { DifficultyValue } from './DifficultySelector';
+export { ControlledDurationSelector } from './ControlledDurationSelector';
+export { ControlledDurationWithUnitSelector } from './ControlledDurationWithUnitSelector';
+export { ControlledNumberSelector } from './ControlledNumberSelector';
 
 // Composants de compteurs
 export { CounterSelector } from './CounterSelector';
@@ -54,4 +52,10 @@ export { QuantitySelector } from './QuantitySelector';
 export { ControlledPersonCountSelector } from './ControlledPersonCountSelector';
 export { ControlledQuantitySelector } from './ControlledQuantitySelector';
 
+// Composants d'affichage
+export { StepFormItem } from './StepFormItem';
+
+// Types
+export type { PriceValue } from './PriceSelector';
+export type { DifficultyValue } from './DifficultySelector';
 export type { RecipeFormData } from './types';

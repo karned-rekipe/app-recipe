@@ -59,11 +59,10 @@ export function SimpleTagListManager({
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         <TouchableOpacity 
-          style={styles.addButton} 
+          style={styles.addButtonSimple} 
           onPress={onAddItem}
         >
-          <Ionicons name="add" size={20} color={theme.colors.primary} />
-          <Text style={styles.addButtonText}>{addButtonText}</Text>
+          <Ionicons name="add" size={24} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -142,6 +141,16 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xs,
     color: theme.colors.primary,
     fontWeight: '500',
+  },
+  addButtonSimple: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.background.white,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyState: {
     padding: theme.spacing.lg,

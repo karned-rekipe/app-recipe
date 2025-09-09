@@ -7,8 +7,12 @@ export interface Ingredient {
 
 export interface Step {
   step_number: number;
+  title: string;
   description: string;
-  duration: string;
+  total_duration: number; // en minutes
+  cooking_duration: number; // en minutes
+  rest_duration: number; // en minutes
+  preparation_duration: number; // en minutes
   created_by: string | null;
 }
 

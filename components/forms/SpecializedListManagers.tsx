@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 import { Ingredient, Step } from '../../types/Recipe';
+import { StepFormItem } from './StepFormItem';
 
 // Gestionnaire pour les ingrédients
 interface IngredientListManagerProps {
@@ -47,11 +48,10 @@ export function IngredientListManager({
       <View style={styles.header}>
         <Text style={styles.title}>Ingrédients</Text>
         <TouchableOpacity 
-          style={styles.addButton} 
+          style={styles.addButtonSimple} 
           onPress={onAddItem}
         >
-          <Ionicons name="add" size={20} color={theme.colors.primary} />
-          <Text style={styles.addButtonText}>Ajouter un ingrédient</Text>
+          <Ionicons name="add" size={24} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -101,7 +101,6 @@ export function IngredientListManager({
 // Gestionnaire pour les étapes
 interface StepListManagerProps {
   fields: any[]; // Fields from useFieldArray
-  renderItem: (item: Omit<Step, 'created_by'>, index: number, onEdit?: () => void) => React.ReactNode;
   onAddItem: () => void;
   onEditItem?: (item: Omit<Step, 'created_by'>, index: number) => void;
   onRemoveItem: (index: number) => void;
@@ -110,7 +109,6 @@ interface StepListManagerProps {
 
 export function StepListManager({
   fields,
-  renderItem,
   onAddItem,
   onEditItem,
   onRemoveItem,
@@ -129,47 +127,31 @@ export function StepListManager({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Étapes de préparation</Text>
+        <Text style={styles.title}>Préparation</Text>
         <TouchableOpacity 
-          style={styles.addButton} 
+          style={styles.addButtonSimple} 
           onPress={onAddItem}
         >
-          <Ionicons name="add" size={20} color={theme.colors.primary} />
-          <Text style={styles.addButtonText}>Ajouter une étape</Text>
+          <Ionicons name="add" size={24} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
       {fields.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyStateText}>Aucune étape ajoutée</Text>
+          <Text style={styles.emptyStateSubtext}>
+            Ajoutez les étapes de préparation de votre recette
+          </Text>
         </View>
       ) : (
         <View>
           {fields.map((item, index) => (
             <View key={item.id || index} style={styles.listItem}>
-              <View style={styles.itemContent}>
-                {renderItem(
-                  item as Omit<Step, 'created_by'>, 
-                  index,
-                  onEditItem ? () => handleEditItem(index) : undefined
-                )}
-              </View>
-              <View style={styles.actions}>
-                {onEditItem && (
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => handleEditItem(index)}
-                  >
-                    <Ionicons name="pencil" size={18} color={theme.colors.primary} />
-                  </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  style={styles.removeButton}
-                  onPress={() => handleRemoveItem(index)}
-                >
-                  <Ionicons name="trash-outline" size={18} color={theme.colors.error} />
-                </TouchableOpacity>
-              </View>
+              <StepFormItem
+                step={item as Omit<Step, 'created_by'>}
+                index={index}
+                onEdit={onEditItem ? () => handleEditItem(index) : undefined}
+              />
             </View>
           ))}
         </View>
@@ -212,6 +194,16 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
     fontWeight: '500',
   },
+  addButtonSimple: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.background.white,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   emptyState: {
     padding: theme.spacing.lg,
     alignItems: 'center',
@@ -224,16 +216,17 @@ const styles = StyleSheet.create({
   emptyStateText: {
     color: theme.colors.text.secondary,
     fontStyle: 'italic',
+    fontSize: 16,
+    marginBottom: theme.spacing.xs,
+  },
+  emptyStateSubtext: {
+    color: theme.colors.text.secondary,
+    fontSize: 14,
+    textAlign: 'center',
   },
   listItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.background.white,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    overflow: 'hidden',
+    width: '100%',
+    marginBottom: theme.spacing.xs,
   },
   itemContent: {
     flex: 1,
@@ -297,7 +290,7 @@ export function InlineIngredientListManager({
           style={inlineStyles.addButton} 
           onPress={onAddItem}
         >
-          <Ionicons name="add" size={16} color={theme.colors.primary} />
+          <Ionicons name="add" size={20} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -348,10 +341,12 @@ const inlineStyles = StyleSheet.create({
     color: theme.colors.text.primary,
   },
   addButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 12,
-    width: 24,
-    height: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.background.white,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

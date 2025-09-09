@@ -23,6 +23,7 @@ export function useModalForm<T extends FieldValues>({
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isValid },
   } = useForm<T>({
     mode,
@@ -51,5 +52,6 @@ export function useModalForm<T extends FieldValues>({
     onSubmit,
     handleCancel,
     reset,
+    watch,
   };
 }
