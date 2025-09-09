@@ -177,6 +177,22 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
     ingredientModal.closeModal();
   };
 
+  const handleDeleteIngredient = () => {
+    if (ingredientModal.index !== undefined) {
+      ingredientsArray.remove(ingredientModal.index);
+      // Mettre à jour les indices des ingrédients cochés
+      setCheckedIngredients(prev => {
+        const newSet = new Set<number>();
+        prev.forEach(i => {
+          if (i < ingredientModal.index!) newSet.add(i);
+          else if (i > ingredientModal.index!) newSet.add(i - 1);
+        });
+        return newSet;
+      });
+    }
+    ingredientModal.closeModal();
+  };
+
   // Gestionnaires pour les étapes
   const handleAddStep = (step: Omit<Step, 'created_by'>) => {
     const newStep = { ...step, step_number: stepsArray.fields.length + 1 };
@@ -220,6 +236,15 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
     attributeModal.closeModal();
   };
 
+  const handleDeleteAttribute = () => {
+    if (attributeModal.index !== undefined) {
+      const currentAttributes = control._formValues.attributes || [];
+      const newAttributes = currentAttributes.filter((_: string, i: number) => i !== attributeModal.index);
+      setValue('attributes', newAttributes);
+    }
+    attributeModal.closeModal();
+  };
+
   // Gestionnaires pour les ustensiles
   const handleAddUtensil = (utensil: string) => {
     const currentUtensils = control._formValues.utensils || [];
@@ -232,6 +257,15 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
       const currentUtensils = control._formValues.utensils || [];
       const newUtensils = [...currentUtensils];
       newUtensils[utensilModal.index] = utensil;
+      setValue('utensils', newUtensils);
+    }
+    utensilModal.closeModal();
+  };
+
+  const handleDeleteUtensil = () => {
+    if (utensilModal.index !== undefined) {
+      const currentUtensils = control._formValues.utensils || [];
+      const newUtensils = currentUtensils.filter((_: string, i: number) => i !== utensilModal.index);
       setValue('utensils', newUtensils);
     }
     utensilModal.closeModal();
@@ -371,7 +405,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
                     const ingredient = item as Omit<Ingredient, 'created_by'>;
                     const isChecked = checkedIngredients.has(index);
                     return (
-                      <TouchableOpacity 
+                      <View
                         key={item.id || index}
                         style={{ 
                           flexDirection: 'row', 
@@ -379,7 +413,6 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
                           padding: 6, 
                           borderRadius: 6
                         }}
-                        onPress={() => toggleIngredientCheck(index)}
                       >
                         <TouchableOpacity
                           style={{
@@ -393,71 +426,34 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
                             justifyContent: 'center',
                             backgroundColor: isChecked ? theme.colors.primary : 'transparent'
                           }}
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            toggleIngredientCheck(index);
-                          }}
+                          onPress={() => toggleIngredientCheck(index)}
                         >
                           {isChecked && <Ionicons name="checkmark" size={14} color="white" />}
                         </TouchableOpacity>
-                        <Text style={{ 
-                          flex: 1, 
-                          fontSize: 16, 
-                          fontWeight: '500', 
-                          color: isChecked ? theme.colors.text.secondary : theme.colors.text.primary,
-                          textDecorationLine: isChecked ? 'line-through' : 'none'
-                        }}>
-                          {ingredient.name}
-                        </Text>
-                        <Text style={{ 
-                          fontSize: 14, 
-                          color: isChecked ? theme.colors.text.secondary : theme.colors.text.secondary, 
-                          marginRight: 12,
-                          textDecorationLine: isChecked ? 'line-through' : 'none'
-                        }}>
-                          {ingredient.quantity} {ingredient.unit}
-                        </Text>
-                        <TouchableOpacity
-                          style={{ 
-                            padding: 6, 
-                            backgroundColor: '#fff',
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#e9ecef',
-                            marginRight: 8
-                          }}
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            ingredientModal.openEditModal(ingredient, index);
-                          }}
+                        <TouchableOpacity 
+                          style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+                          onPress={() => ingredientModal.openEditModal(ingredient, index)}
+                          activeOpacity={0.7}
                         >
-                          <Ionicons name="pencil-outline" size={14} color={theme.colors.primary} />
+                          <Text style={{ 
+                            flex: 1, 
+                            fontSize: 16, 
+                            fontWeight: '500', 
+                            color: isChecked ? theme.colors.text.secondary : theme.colors.text.primary,
+                            textDecorationLine: isChecked ? 'line-through' : 'none'
+                          }}>
+                            {ingredient.name}
+                          </Text>
+                          <Text style={{ 
+                            fontSize: 14, 
+                            color: isChecked ? theme.colors.text.secondary : theme.colors.text.secondary, 
+                            marginRight: 12,
+                            textDecorationLine: isChecked ? 'line-through' : 'none'
+                          }}>
+                            {ingredient.quantity} {ingredient.unit}
+                          </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{ 
-                            padding: 6, 
-                            backgroundColor: '#fff',
-                            borderRadius: 12,
-                            borderWidth: 1,
-                            borderColor: '#e9ecef'
-                          }}
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            ingredientsArray.remove(index);
-                            // Mettre à jour les indices des ingrédients cochés
-                            setCheckedIngredients(prev => {
-                              const newSet = new Set<number>();
-                              prev.forEach(i => {
-                                if (i < index) newSet.add(i);
-                                else if (i > index) newSet.add(i - 1);
-                              });
-                              return newSet;
-                            });
-                          }}
-                        >
-                          <Ionicons name="trash-outline" size={14} color={theme.colors.error} />
-                        </TouchableOpacity>
-                      </TouchableOpacity>
+                      </View>
                     );
                   })}
                 </View>
@@ -565,6 +561,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
         visible={ingredientModal.isVisible}
         onSave={ingredientModal.isEditMode ? handleEditIngredient : handleAddIngredient}
         onCancel={ingredientModal.closeModal}
+        onDelete={ingredientModal.isEditMode ? handleDeleteIngredient : undefined}
         initialData={ingredientModal.data}
         mode={ingredientModal.modalState.mode}
       />
@@ -583,6 +580,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
         visible={attributeModal.isVisible}
         onSave={attributeModal.isEditMode ? handleEditAttribute : handleAddAttribute}
         onCancel={attributeModal.closeModal}
+        onDelete={attributeModal.isEditMode ? handleDeleteAttribute : undefined}
         title={attributeModal.isEditMode ? "Modifier l'attribut" : "Ajouter un attribut"}
         placeholder="Ex: Végétarien, Sans gluten, Épicé..."
         initialData={attributeModal.data}
@@ -593,6 +591,7 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
         visible={utensilModal.isVisible}
         onSave={utensilModal.isEditMode ? handleEditUtensil : handleAddUtensil}
         onCancel={utensilModal.closeModal}
+        onDelete={utensilModal.isEditMode ? handleDeleteUtensil : undefined}
         title={utensilModal.isEditMode ? "Modifier l'ustensile" : "Ajouter un ustensile"}
         placeholder="Ex: Four, Mixeur, Casserole..."
         initialData={utensilModal.data}

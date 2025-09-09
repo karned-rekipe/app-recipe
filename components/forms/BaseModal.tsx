@@ -21,6 +21,7 @@ interface BaseModalProps {
   title: string;
   onCancel: () => void;
   onSave: () => void;
+  onDelete?: () => void;
   isValid: boolean;
   saveButtonText?: string;
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export function BaseModal({
   title,
   onCancel,
   onSave,
+  onDelete,
   isValid,
   saveButtonText = 'Ajouter',
   children,
@@ -61,6 +63,15 @@ export function BaseModal({
           <View style={styles.form}>
             {children}
           </View>
+
+          {onDelete && (
+            <View style={styles.deleteSection}>
+              <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
+                <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
+                <Text style={styles.deleteButtonText}>Supprimer</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -110,5 +121,25 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: theme.spacing.md,
+  },
+  deleteSection: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+    padding: theme.spacing.md,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    backgroundColor: '#fee',
+    borderRadius: theme.borderRadius.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.error,
+  },
+  deleteButtonText: {
+    color: theme.colors.error,
+    fontWeight: '500',
+    marginLeft: theme.spacing.xs,
   },
 });

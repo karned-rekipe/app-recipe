@@ -21,6 +21,7 @@ interface ModernIngredientModalProps {
   visible: boolean;
   onSave: (ingredient: Omit<Ingredient, 'created_by'>) => void;
   onCancel: () => void;
+  onDelete?: () => void;
   initialData?: Omit<Ingredient, 'created_by'>;
   mode?: 'add' | 'edit';
 }
@@ -29,6 +30,7 @@ export function ModernIngredientModal({
   visible,
   onSave,
   onCancel,
+  onDelete,
   initialData,
   mode = 'add',
 }: ModernIngredientModalProps) {
@@ -80,6 +82,7 @@ export function ModernIngredientModal({
       title={mode === 'edit' ? 'Modifier l\'ingrédient' : 'Ajouter un ingrédient'}
       onCancel={handleCancel}
       onSave={onSubmit}
+      onDelete={mode === 'edit' ? onDelete : undefined}
       isValid={isValid}
       saveButtonText={mode === 'edit' ? 'Modifier' : 'Ajouter'}
     >

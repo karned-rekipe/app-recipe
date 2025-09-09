@@ -19,6 +19,7 @@ interface ModernTagModalProps {
   placeholder: string;
   onSave: (tag: string) => void;
   onCancel: () => void;
+  onDelete?: () => void;
   initialData?: string;
   mode?: 'add' | 'edit';
 }
@@ -29,6 +30,7 @@ export function ModernTagModal({
   placeholder,
   onSave,
   onCancel,
+  onDelete,
   initialData,
   mode = 'add',
 }: ModernTagModalProps) {
@@ -54,6 +56,7 @@ export function ModernTagModal({
       title={title}
       onCancel={handleCancel}
       onSave={onSubmit}
+      onDelete={mode === 'edit' ? onDelete : undefined}
       isValid={isValid}
       saveButtonText={mode === 'edit' ? 'Modifier' : 'Ajouter'}
     >

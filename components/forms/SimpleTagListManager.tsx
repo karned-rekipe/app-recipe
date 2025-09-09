@@ -74,7 +74,11 @@ export function SimpleTagListManager({
         <FlatList
           data={items}
           renderItem={({ item, index }) => (
-            <View style={styles.listItem}>
+            <TouchableOpacity 
+              style={styles.listItem}
+              onPress={() => handleEditItem(index)}
+              activeOpacity={0.7}
+            >
               <View style={styles.itemContent}>
                 {renderItem(
                   item, 
@@ -82,23 +86,7 @@ export function SimpleTagListManager({
                   onEditItem ? () => handleEditItem(index) : undefined
                 )}
               </View>
-              <View style={styles.actions}>
-                {onEditItem && (
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => handleEditItem(index)}
-                  >
-                    <Ionicons name="pencil" size={18} color={theme.colors.primary} />
-                  </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  style={styles.removeButton}
-                  onPress={() => handleRemoveItem(index)}
-                >
-                  <Ionicons name="trash-outline" size={18} color={theme.colors.error} />
-                </TouchableOpacity>
-              </View>
-            </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(_, index) => index.toString()}
           scrollEnabled={false}
@@ -178,21 +166,6 @@ const styles = StyleSheet.create({
   itemContent: {
     flex: 1,
     padding: theme.spacing.md,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-  },
-  editButton: {
-    padding: theme.spacing.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  removeButton: {
-    padding: theme.spacing.md,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   errorText: {
     fontSize: 14,
