@@ -4,7 +4,7 @@
  * Respecte le principe SRP - responsable uniquement de la gestion des étapes
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
@@ -42,6 +42,20 @@ export function ControlledStepModalV2({
   initialData,
   mode = 'add',
 }: ControlledStepModalV2Props) {
+  const defaultValues = useMemo(() => ({
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    cooking_duration: initialData?.cooking_duration || 0,
+    rest_duration: initialData?.rest_duration || 0,
+    preparation_duration: initialData?.preparation_duration || 0,
+  }), [
+    initialData?.title,
+    initialData?.description,
+    initialData?.cooking_duration,
+    initialData?.rest_duration,
+    initialData?.preparation_duration,
+  ]);
+
   const {
     control,
     errors,
@@ -51,13 +65,7 @@ export function ControlledStepModalV2({
     watch,
     reset,
   } = useModalForm<StepFormData>({
-    defaultValues: {
-      title: initialData?.title || '',
-      description: initialData?.description || '',
-      cooking_duration: initialData?.cooking_duration || 0,
-      rest_duration: initialData?.rest_duration || 0,
-      preparation_duration: initialData?.preparation_duration || 0,
-    },
+    defaultValues,
     onSave: (data) => {
       const totalDuration = data.cooking_duration + data.rest_duration + data.preparation_duration;
       onSave({

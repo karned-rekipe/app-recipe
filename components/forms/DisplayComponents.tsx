@@ -156,14 +156,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   tagContainer: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingVertical: 2,
     alignSelf: 'flex-start',
   },
   tagText: {
-    fontSize: 14,
+    fontSize: 16,
     color: theme.colors.text.primary,
     fontWeight: '500',
   },

@@ -3,7 +3,7 @@
  * Utilise la composition avec BaseModal et useModalForm
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { theme } from '../../constants/theme';
 import { ControlledInput } from './ControlledInput';
 import { BaseModal } from './BaseModal';
@@ -34,6 +34,10 @@ export function ModernTagModal({
   initialData,
   mode = 'add',
 }: ModernTagModalProps) {
+  const defaultValues = useMemo(() => ({
+    value: initialData || '',
+  }), [initialData]);
+
   const {
     control,
     errors,
@@ -41,9 +45,7 @@ export function ModernTagModal({
     onSubmit,
     handleCancel,
   } = useModalForm<TagFormData>({
-    defaultValues: {
-      value: initialData || '',
-    },
+    defaultValues,
     onSave: (data) => {
       onSave(data.value.trim());
     },

@@ -71,10 +71,10 @@ export function SimpleTagListManager({
           <Text style={styles.emptyStateText}>{emptyStateText}</Text>
         </View>
       ) : (
-        <FlatList
-          data={items}
-          renderItem={({ item, index }) => (
+        <View style={styles.listContainer}>
+          {items.map((item, index) => (
             <TouchableOpacity 
+              key={index}
               style={styles.listItem}
               onPress={() => handleEditItem(index)}
               activeOpacity={0.7}
@@ -87,10 +87,8 @@ export function SimpleTagListManager({
                 )}
               </View>
             </TouchableOpacity>
-          )}
-          keyExtractor={(_, index) => index.toString()}
-          scrollEnabled={false}
-        />
+          ))}
+        </View>
       )}
 
       {error && (
@@ -141,10 +139,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyState: {
-    padding: theme.spacing.lg,
+    padding: theme.spacing.md,
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: theme.colors.border,
     borderStyle: 'dashed',
@@ -152,20 +149,19 @@ const styles = StyleSheet.create({
   emptyStateText: {
     color: theme.colors.text.secondary,
     fontStyle: 'italic',
+    fontSize: 12,
+  },
+  listContainer: {
+    // Container pour la liste sans style particulier
   },
   listItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.background.white,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    overflow: 'hidden',
+    marginBottom: theme.spacing.xs,
+    paddingVertical: theme.spacing.xs,
   },
   itemContent: {
     flex: 1,
-    padding: theme.spacing.md,
   },
   errorText: {
     fontSize: 14,

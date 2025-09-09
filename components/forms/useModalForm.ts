@@ -4,7 +4,7 @@
  */
 
 import { useForm, FieldValues, DefaultValues, SubmitHandler } from 'react-hook-form';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface UseModalFormOptions<T extends FieldValues> {
   defaultValues: DefaultValues<T>;
@@ -44,6 +44,19 @@ export function useModalForm<T extends FieldValues>({
   }, [onCancel, reset]);
 
   const onSubmit = handleSubmit(handleSave);
+
+  // Utiliser une référence pour éviter les boucles infinies
+  const prevDefaultValuesRef = useRef<string>('');
+  
+  // Réinitialiser le formulaire quand les valeurs par défaut changent
+  useEffect(() => {
+    const currentDefaultValuesString = JSON.stringify(defaultValues);
+    
+    if (prevDefaultValuesRef.current !== currentDefaultValuesString) {
+      reset(defaultValues);
+      prevDefaultValuesRef.current = currentDefaultValuesString;
+    }
+  }, [defaultValues, reset]);
 
   return {
     control,

@@ -3,7 +3,7 @@
  * Utilise la composition avec BaseModal et useModalForm
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { theme } from '../../constants/theme';
 import { ControlledInput } from './ControlledInput';
@@ -34,6 +34,12 @@ export function ModernIngredientModal({
   initialData,
   mode = 'add',
 }: ModernIngredientModalProps) {
+  const defaultValues = useMemo(() => ({
+    name: initialData?.name || '',
+    quantity: initialData?.quantity || 0,
+    unit: initialData?.unit || '',
+  }), [initialData?.name, initialData?.quantity, initialData?.unit]);
+
   const {
     control,
     errors,
@@ -42,11 +48,7 @@ export function ModernIngredientModal({
     handleCancel,
     reset,
   } = useModalForm<IngredientFormData>({
-    defaultValues: {
-      name: initialData?.name || '',
-      quantity: initialData?.quantity || 0,
-      unit: initialData?.unit || '',
-    },
+    defaultValues,
     onSave: (data) => {
       onSave({
         name: data.name,

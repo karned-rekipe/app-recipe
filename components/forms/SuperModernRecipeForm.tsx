@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
   Platform 
 } from 'react-native';
-import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
+import { useForm, useFieldArray, useWatch, SubmitHandler } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 import { Recipe, Ingredient, Step } from '../../types/Recipe';
@@ -219,16 +219,18 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
     stepModal.closeModal();
   };
 
+  // Utilisation de useWatch pour obtenir les valeurs actuelles
+  const currentAttributes = useWatch({ control, name: 'attributes' }) || [];
+  const currentUtensils = useWatch({ control, name: 'utensils' }) || [];
+
   // Gestionnaires pour les attributs
   const handleAddAttribute = (attribute: string) => {
-    const currentAttributes = control._formValues.attributes || [];
     setValue('attributes', [...currentAttributes, attribute]);
     attributeModal.closeModal();
   };
 
   const handleEditAttribute = (attribute: string) => {
     if (attributeModal.index !== undefined) {
-      const currentAttributes = control._formValues.attributes || [];
       const newAttributes = [...currentAttributes];
       newAttributes[attributeModal.index] = attribute;
       setValue('attributes', newAttributes);
@@ -238,7 +240,6 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
 
   const handleDeleteAttribute = () => {
     if (attributeModal.index !== undefined) {
-      const currentAttributes = control._formValues.attributes || [];
       const newAttributes = currentAttributes.filter((_: string, i: number) => i !== attributeModal.index);
       setValue('attributes', newAttributes);
     }
@@ -247,14 +248,12 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
 
   // Gestionnaires pour les ustensiles
   const handleAddUtensil = (utensil: string) => {
-    const currentUtensils = control._formValues.utensils || [];
     setValue('utensils', [...currentUtensils, utensil]);
     utensilModal.closeModal();
   };
 
   const handleEditUtensil = (utensil: string) => {
     if (utensilModal.index !== undefined) {
-      const currentUtensils = control._formValues.utensils || [];
       const newUtensils = [...currentUtensils];
       newUtensils[utensilModal.index] = utensil;
       setValue('utensils', newUtensils);
@@ -264,7 +263,6 @@ export function SuperModernRecipeForm({ initialData, onSave, onCancel, isLoading
 
   const handleDeleteUtensil = () => {
     if (utensilModal.index !== undefined) {
-      const currentUtensils = control._formValues.utensils || [];
       const newUtensils = currentUtensils.filter((_: string, i: number) => i !== utensilModal.index);
       setValue('utensils', newUtensils);
     }
