@@ -66,13 +66,13 @@ export class LicenseApiService {
         'Le token doit être une chaîne de caractères non vide'
       );
     }
+
+    const url = API_BASE_URL + '/mine';
     
-    console.log('🚀 [LicenseAPI] URL:', API_BASE_URL + '/mine');
-    console.log('🚀 [LicenseAPI] Token:', token.substring(0, 20) + '...');
+    console.log('🚀 [LicenseAPI] URL:', url);
+    console.log('🚀 [LicenseAPI] Token:', token.substring(0, 10) + '...' + token.substring(token.length-10));
     
     try {
-      const url = API_BASE_URL + '/mine';
-      
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -121,11 +121,7 @@ export class LicenseApiService {
       });
       
       // Accepter plusieurs formats de statut de succès
-      const isSuccess = data.dataStatus === 'success' || 
-                       data.status === 200 || 
-                       data.status === 'success' ||
-                       data.message === 'Operation completed successfully' ||
-                       data.message?.toLowerCase().includes('success');
+      const isSuccess = data.status === 200;
       
       if (!isSuccess) {
         throw new LicenseApiError(
@@ -138,13 +134,8 @@ export class LicenseApiService {
       // Vérifier que nous avons bien des licences - essayer plusieurs formats
       let licenses: any[] = [];
       
-      if (Array.isArray(data.licenses)) {
-        licenses = data.licenses;
-      } else if (Array.isArray(data.data)) {
+      if (Array.isArray(data.data)) {
         licenses = data.data;
-      } else if (Array.isArray(data)) {
-        // L'API peut retourner directement un tableau
-        licenses = data as any[];
       } else {
         console.warn('⚠️ [LicenseAPI] Format de licences inattendu, création d\'un tableau vide');
         licenses = [];

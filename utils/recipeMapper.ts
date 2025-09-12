@@ -2,20 +2,20 @@ import { Recipe, LegacyRecipe } from '../types/Recipe';
 
 // Mapping des pays vers leurs emojis
 const countryFlags: { [key: string]: string } = {
-  'France': '🇫🇷',
-  'Italie': '🇮🇹',
-  'Espagne': '🇪🇸',
-  'Thaïlande': '🇹🇭',
-  'Inde': '🇮🇳',
-  'États-Unis': '🇺🇸',
-  'Portugal': '🇵🇹',
-  'Chine': '🇨🇳',
-  'Japon': '🇯🇵',
-  'Mexique': '🇲🇽',
-  'Maroc': '🇲🇦',
-  'Grèce': '🇬🇷',
   'Allemagne': '🇩🇪',
+  'Chine': '🇨🇳',
+  'Espagne': '🇪🇸',
+  'États-Unis': '🇺🇸',
+  'France': '🇫🇷',
+  'Grèce': '🇬🇷',
+  'Inde': '🇮🇳',
+  'Italie': '🇮🇹',
+  'Japon': '🇯🇵',
+  'Maroc': '🇲🇦',
+  'Mexique': '🇲🇽',
+  'Portugal': '🇵🇹',
   'Royaume-Uni': '🇬🇧',
+  'Thaïlande': '🇹🇭'
 };
 
 // Mapping des attributs vers les types de recettes
