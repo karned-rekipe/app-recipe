@@ -120,8 +120,7 @@ export class LicenseApiService {
         isArray: Array.isArray(data)
       });
       
-      // Accepter plusieurs formats de statut de succès
-      const isSuccess = data.status === 200;
+      const isSuccess = data.status === "success";
       
       if (!isSuccess) {
         throw new LicenseApiError(
