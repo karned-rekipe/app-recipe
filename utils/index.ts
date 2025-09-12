@@ -8,3 +8,4 @@ export {
   adjustIngredientsQuantities,
   formatQuantityForDisplay 
 } from './quantityAdjustment';
+export { maskToken, maskEmail, maskString } from './maskingUtils';

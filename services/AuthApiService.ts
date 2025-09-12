@@ -5,6 +5,7 @@
 
 import type { AuthResponse, AuthTokens, LoginCredentials } from '../types/Auth';
 import config from '../config/api';
+import { maskToken } from '../utils/maskingUtils';
 
 // ==================== GESTION DES ERREURS ====================
 
@@ -106,7 +107,11 @@ class AuthLogger {
   static logLoginResponse(status: number, data: any): void {
     console.log('🔍 [AuthAPI] Réponse de l\'API login:', {
       status,
-      data,
+      data: {
+        ...data,
+        access_token: data.access_token ? maskToken(data.access_token) : undefined,
+        refresh_token: data.refresh_token ? maskToken(data.refresh_token) : undefined
+      },
       hasAccessToken: !!data.access_token,
       hasRefreshToken: !!data.refresh_token
     });
@@ -127,6 +132,8 @@ class AuthLogger {
     console.log('🎯 [AuthAPI] Tokens finaux à retourner:', {
       hasAccess: !!tokens.access_token,
       hasRefresh: !!tokens.refresh_token,
+      accessToken: maskToken(tokens.access_token),
+      refreshToken: maskToken(tokens.refresh_token),
       accessLength: tokens.access_token?.length || 0,
       refreshLength: tokens.refresh_token?.length || 0
     });
@@ -136,6 +143,8 @@ class AuthLogger {
     console.log('🔄 [AuthAPI] Nouveaux tokens après refresh:', {
       hasAccess: !!tokens.access_token,
       hasRefresh: !!tokens.refresh_token,
+      accessToken: maskToken(tokens.access_token),
+      refreshToken: maskToken(tokens.refresh_token),
       accessLength: tokens.access_token?.length || 0,
       refreshLength: tokens.refresh_token?.length || 0
     });

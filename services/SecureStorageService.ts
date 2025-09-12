@@ -1,17 +1,22 @@
 /**
- * Service de stockage sécurisé pour l'authentification
- * Priorité: SecureStore > AsyncStorage chiffré simple
+ * Service de stockage sécurisé selon le principe SRP
+ * Responsabilité unique : Orchestrer le stockage de tokens en utilisant le meilleur adaptateur disponible
  * 
- * SÉCURITÉ:
- * 1. SecureStore (iOS Keychain / Android Keystore) - Le plus sécurisé
- * 2. AsyncStorage avec chiffrement simple - Sécurisé et persistant
+ * Architecture:
+ * - Utilise une stratégie de fallback (SecureStore → AsyncStorage chiffré)
+ * - Délègue les responsabilités spécifiques aux services appropriés
+ * - Respecte le principe de responsabilité unique
  */
 
-import * as SecureStore from 'expo-secure-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
 import type { AuthTokens } from '../types/Auth';
-import config from '../config/api';
+import type { ITokenStorageAdapter } from './interfaces/ITokenStorageAdapter';
+import type { ITokenValidator } from './interfaces/ITokenValidator';
+
+import { StorageDetectionService } from './storage/StorageDetectionService';
+import { SimpleCryptoService } from './crypto/SimpleCryptoService';
+import { TokenValidator } from './validation/TokenValidator';
+import { SecureStoreAdapter } from './adapters/SecureStoreAdapter';
+import { AsyncStorageAdapter } from './adapters/AsyncStorageAdapter';
 
 // Erreur personnalisée pour le stockage
 export class StorageError extends Error {
@@ -21,197 +26,91 @@ export class StorageError extends Error {
   }
 }
 
-// Clés de stockage
-const KEYS = {
-  ACCESS_TOKEN: 'user_access_token',
-  REFRESH_TOKEN: 'user_refresh_token'
-} as const;
-
-// Clés de fallback pour AsyncStorage
-const FALLBACK_KEYS = {
-  ACCESS_TOKEN: 'encrypted_access_token',
-  REFRESH_TOKEN: 'encrypted_refresh_token'
-} as const;
-
 /**
- * Vérifie si SecureStore est disponible
+ * Service principal de stockage de tokens avec architecture modulaire
  */
-const isSecureStoreAvailable = async (): Promise<boolean> => {
-  try {
-    if (Platform.OS === 'web') return false;
-    
-    await SecureStore.setItemAsync('test_availability', 'test');
-    await SecureStore.deleteItemAsync('test_availability');
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-/**
- * Chiffrement simple XOR + Base64 (identique à celui qui fonctionnait dans les tests)
- */
-const simpleEncrypt = (text: string): string => {
-  if (!text || typeof text !== 'string') {
-    throw new Error('simpleEncrypt: text doit être une chaîne de caractères non vide');
-  }
-  
-  const key = 'rekipe2024';
-  let encrypted = '';
-  for (let i = 0; i < text.length; i++) {
-    encrypted += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-  }
-  // Utiliser btoa au lieu de Buffer pour plus de compatibilité
-  return btoa(encrypted);
-};
-
-const simpleDecrypt = (encryptedBase64: string): string => {
-  if (!encryptedBase64 || typeof encryptedBase64 !== 'string') {
-    throw new Error('simpleDecrypt: encryptedBase64 doit être une chaîne de caractères non vide');
-  }
-  
-  const key = 'rekipe2024';
-  // Utiliser atob au lieu de Buffer
-  const encrypted = atob(encryptedBase64);
-  let decrypted = '';
-  for (let i = 0; i < encrypted.length; i++) {
-    decrypted += String.fromCharCode(encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-  }
-  return decrypted;
-};
-
 class SecureStorageService {
+  private readonly storageAdapters: ITokenStorageAdapter[];
+  private readonly tokenValidator: ITokenValidator;
+
+  constructor() {
+    // Injection des dépendances
+    const storageDetection = new StorageDetectionService();
+    const cryptoService = new SimpleCryptoService();
+    this.tokenValidator = new TokenValidator();
+
+    // Configuration des adaptateurs par ordre de préférence
+    this.storageAdapters = [
+      new SecureStoreAdapter(storageDetection),
+      new AsyncStorageAdapter(cryptoService, storageDetection)
+    ];
+  }
+
   /**
-   * Stocke les tokens de manière sécurisée avec fallback
+   * Stocke les tokens en utilisant le premier adaptateur disponible
    */
   async storeTokens(tokens: AuthTokens): Promise<void> {
-    try {
-      // Validation des tokens avant stockage
-      if (!tokens || typeof tokens.access_token !== 'string' || typeof tokens.refresh_token !== 'string') {
-        throw new StorageError('Tokens invalides: access_token et refresh_token doivent être des chaînes de caractères');
-      }
+    // Validation préalable
+    if (!this.tokenValidator.validateTokens(tokens)) {
+      throw new Error('Tokens invalides: access_token et refresh_token doivent être des chaînes de caractères non vides');
+    }
 
-      if (!tokens.access_token.trim() || !tokens.refresh_token.trim()) {
-        throw new StorageError('Tokens vides: access_token et refresh_token ne peuvent pas être vides');
-      }
+    console.log('🔐 [SecureStorage] Début du stockage des tokens', {
+      hasAccess: !!tokens.access_token,
+      hasRefresh: !!tokens.refresh_token,
+      accessLength: tokens.access_token.length,
+      refreshLength: tokens.refresh_token.length
+    });
 
-      console.log('🔐 [SecureStorage] Stockage des tokens', { 
-        hasAccess: !!tokens.access_token,
-        hasRefresh: !!tokens.refresh_token,
-        accessLength: tokens.access_token.length,
-        refreshLength: tokens.refresh_token.length
-      });
-
-      // 1. Tentative SecureStore (recommandé)
-      if (await isSecureStoreAvailable()) {
-        try {
-          await SecureStore.setItemAsync(KEYS.ACCESS_TOKEN, tokens.access_token);
-          await SecureStore.setItemAsync(KEYS.REFRESH_TOKEN, tokens.refresh_token);
-          console.log('✅ [SecureStorage] Tokens stockés via SecureStore');
-          return;
-        } catch (secureError) {
-          console.warn('⚠️  [SecureStorage] SecureStore a échoué, passage au fallback', secureError);
-        }
-      }
-
-      // 2. Fallback AsyncStorage avec chiffrement simple
-      console.log('🔄 [SecureStorage] Tentative de chiffrement...');
-      
+    // Tentative de stockage avec le premier adaptateur disponible
+    for (const adapter of this.storageAdapters) {
       try {
-        const encryptedAccess = simpleEncrypt(tokens.access_token);
-        const encryptedRefresh = simpleEncrypt(tokens.refresh_token);
-        
-        console.log('🔐 [SecureStorage] Chiffrement réussi, sauvegarde AsyncStorage...');
-        
-        await AsyncStorage.setItem(FALLBACK_KEYS.ACCESS_TOKEN, encryptedAccess);
-        await AsyncStorage.setItem(FALLBACK_KEYS.REFRESH_TOKEN, encryptedRefresh);
-        
-        console.log('✅ [SecureStorage] Tokens stockés via AsyncStorage chiffré');
-      } catch (encryptError) {
-        console.error('❌ [SecureStorage] Erreur de chiffrement:', encryptError);
-        throw encryptError;
+        if (await adapter.isAvailable()) {
+          await adapter.storeTokens(tokens);
+        console.log(`✅ [SecureStorage] Tokens stockés via ${adapter.name}`);
+        return;
+      } else {
+        console.log(`⚠️  [SecureStorage] ${adapter.name} non disponible, passage au suivant`);
       }
-
     } catch (error) {
-      console.error('❌ [SecureStorage] Erreur lors du stockage:', error);
-      throw new StorageError(
-        'Impossible de sauvegarder les tokens',
-        error instanceof Error ? error.message : String(error)
-      );
+      console.warn(`❌ [SecureStorage] Échec ${adapter.name}, tentative suivante:`, error);
+      // Continue avec l'adaptateur suivant
     }
   }
 
-  /**
-   * Récupère les tokens stockés
+  throw new Error('Aucun adaptateur de stockage disponible');
+}  /**
+   * Récupère les tokens depuis le premier adaptateur qui en contient
    */
   async getTokens(): Promise<AuthTokens | null> {
-    try {
-      console.log('📖 [SecureStorage] Récupération des tokens');
+    console.log('📖 [SecureStorage] Récupération des tokens');
 
-      // 1. Tentative SecureStore
-      if (await isSecureStoreAvailable()) {
-        try {
-          const accessToken = await SecureStore.getItemAsync(KEYS.ACCESS_TOKEN);
-          const refreshToken = await SecureStore.getItemAsync(KEYS.REFRESH_TOKEN);
-
-          if (accessToken && refreshToken) {
-            console.log('✅ [SecureStorage] Tokens récupérés via SecureStore');
-            return { 
-              access_token: accessToken, 
-              refresh_token: refreshToken,
-              token_type: 'Bearer',
-              expires_in: 3600
-            };
+    for (const adapter of this.storageAdapters) {
+      try {
+        if (await adapter.isAvailable()) {
+          const tokens = await adapter.getTokens();
+          if (tokens && this.tokenValidator.validateTokens(tokens)) {
+            console.log(`✅ [SecureStorage] Tokens récupérés via ${adapter.name}`);
+            return tokens;
           }
-        } catch (secureError) {
-          console.warn('⚠️  [SecureStorage] Erreur SecureStore, tentative fallback');
         }
+      } catch (error) {
+        console.warn(`⚠️  [SecureStorage] Erreur ${adapter.name}:`, error);
+        // Continue avec l'adaptateur suivant
       }
-
-      // 2. Fallback AsyncStorage avec déchiffrement
-      const encryptedAccess = await AsyncStorage.getItem(FALLBACK_KEYS.ACCESS_TOKEN);
-      const encryptedRefresh = await AsyncStorage.getItem(FALLBACK_KEYS.REFRESH_TOKEN);
-
-      if (encryptedAccess && encryptedRefresh) {
-        const accessToken = simpleDecrypt(encryptedAccess);
-        const refreshToken = simpleDecrypt(encryptedRefresh);
-        console.log('✅ [SecureStorage] Tokens récupérés via AsyncStorage déchiffré');
-        return { 
-          access_token: accessToken, 
-          refresh_token: refreshToken,
-          token_type: 'Bearer',
-          expires_in: 3600
-        };
-      }
-
-      console.log('ℹ️  [SecureStorage] Aucun token trouvé');
-      return null;
-
-    } catch (error) {
-      console.error('❌ [SecureStorage] Erreur lors de la récupération:', error);
-      return null;
     }
+
+    console.log('ℹ️  [SecureStorage] Aucun token valide trouvé');
+    return null;
   }
 
   /**
-   * Vérifie si le token d'accès a expiré
+   * Vérifie si les tokens stockés ont expiré
    */
   async isTokenExpired(): Promise<boolean> {
     try {
       const tokens = await this.getTokens();
-      if (!tokens?.access_token) {
-        return true;
-      }
-
-      // Décoder le JWT pour vérifier l'expiration
-      try {
-        const payload = JSON.parse(atob(tokens.access_token.split('.')[1]));
-        const currentTime = Math.floor(Date.now() / 1000);
-        return payload.exp < currentTime;
-      } catch (decodeError) {
-        console.warn('⚠️  Impossible de décoder le token, considéré comme expiré');
-        return true;
-      }
+      return this.tokenValidator.areTokensExpired(tokens);
     } catch (error) {
       console.error('❌ [SecureStorage] Erreur lors de la vérification d\'expiration:', error);
       return true; // En cas d'erreur, considérer comme expiré pour forcer la reconnexion
@@ -219,36 +118,34 @@ class SecureStorageService {
   }
 
   /**
-   * Supprime tous les tokens stockés
+   * Supprime tous les tokens de tous les adaptateurs
    */
   async clearTokens(): Promise<void> {
-    try {
-      console.log('🗑️  [SecureStorage] Suppression des tokens');
+    console.log('🗑️  [SecureStorage] Suppression de tous les tokens');
 
-      // Nettoyage SecureStore si disponible
-      if (await isSecureStoreAvailable()) {
-        try {
-          await SecureStore.deleteItemAsync(KEYS.ACCESS_TOKEN);
-          await SecureStore.deleteItemAsync(KEYS.REFRESH_TOKEN);
-        } catch (error) {
-          console.warn('⚠️  Erreur lors du nettoyage SecureStore:', error);
+    const errors: string[] = [];
+
+    // Suppression sur tous les adaptateurs pour assurer un nettoyage complet
+    for (const adapter of this.storageAdapters) {
+      try {
+        if (await adapter.isAvailable()) {
+          await adapter.clearTokens();
+          console.log(`✅ [SecureStorage] Tokens supprimés de ${adapter.name}`);
         }
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        errors.push(`${adapter.name}: ${errorMsg}`);
+        console.warn(`⚠️  [SecureStorage] Erreur suppression ${adapter.name}:`, error);
       }
-
-      // Nettoyage AsyncStorage
-      await AsyncStorage.removeItem(FALLBACK_KEYS.ACCESS_TOKEN);
-      await AsyncStorage.removeItem(FALLBACK_KEYS.REFRESH_TOKEN);
-
-      console.log('✅ [SecureStorage] Tokens supprimés');
-    } catch (error) {
-      console.error('❌ [SecureStorage] Erreur lors de la suppression:', error);
-      throw new StorageError(
-        'Erreur lors de la suppression des tokens',
-        error instanceof Error ? error.message : String(error)
-      );
     }
+
+    if (errors.length === this.storageAdapters.length) {
+      throw new Error(`Erreur lors de la suppression: ${errors.join(', ')}`);
+    }
+
+    console.log('✅ [SecureStorage] Nettoyage terminé');
   }
 }
 
-// Export de l'instance singleton
+// Export de l'instance singleton pour la compatibilité avec l'API existante
 export const secureStorageService = new SecureStorageService();
