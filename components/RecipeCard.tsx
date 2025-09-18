@@ -3,6 +3,9 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LegacyRecipe } from '../types/Recipe';
 import { RecipeMetadata } from './RecipeMetadata';
 
+// Image par défaut pour les recettes sans illustration
+const defaultRecipeImage = require('../assets/images/default_recipe.png');
+
 type Props = {
   recipe: LegacyRecipe;
   onPress?: () => void;
@@ -18,9 +21,7 @@ export default function RecipeCard({ recipe, onPress }: Props) {
         {recipe.image ? (
           <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
         ) : (
-          <View style={styles.placeholderImage}>
-            <Text style={styles.placeholderText}>🍽️</Text>
-          </View>
+          <Image source={defaultRecipeImage} style={styles.recipeImage} />
         )}
       </View>
       
@@ -68,16 +69,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-  },
-  placeholderImage: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    fontSize: 32,
   },
   content: {
     padding: 12,

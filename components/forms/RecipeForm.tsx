@@ -16,6 +16,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 import { Recipe, Ingredient, Step } from '../../types/Recipe';
+import { extractFormDataFromRecipe } from '../../utils/recipeMapper';
 
 import { FormInput } from './FormInput';
 import { FormListManager } from './FormListManager';
@@ -47,6 +48,9 @@ interface RecipeFormProps {
 }
 
 export function RecipeForm({ initialData, onSave, onCancel, isLoading = false }: RecipeFormProps) {
+  // Extraction des données du processus si initialData existe
+  const extractedData = initialData ? extractFormDataFromRecipe(initialData as Recipe) : { ingredients: [], utensils: [], steps: [] };
+  
   // État du formulaire principal
   const [formData, setFormData] = useState<RecipeFormData>({
     name: initialData?.name || '',
@@ -56,17 +60,21 @@ export function RecipeForm({ initialData, onSave, onCancel, isLoading = false }:
     number_of_persons: initialData?.number_of_persons?.toString() || '',
     origin_country: initialData?.origin_country || '',
     attributes: initialData?.attributes || [],
-    utensils: initialData?.utensils || [],
-    ingredients: initialData?.ingredients?.map(ing => ({
+    utensils: extractedData.utensils,
+    ingredients: extractedData.ingredients.map(ing => ({
       name: ing.name,
       quantity: ing.quantity,
       unit: ing.unit
-    })) || [],
-    steps: initialData?.steps?.map(step => ({
+    })),
+    steps: extractedData.steps.map(step => ({
       step_number: step.step_number,
+      title: step.title,
       description: step.description,
-      duration: step.duration
-    })) || [],
+      total_duration: step.total_duration,
+      cooking_duration: step.cooking_duration,
+      rest_duration: step.rest_duration,
+      preparation_duration: step.preparation_duration
+    })),
     thumbnail_url: initialData?.thumbnail_url || '',
     large_image_url: initialData?.large_image_url || '',
     source_reference: initialData?.source_reference || '',
