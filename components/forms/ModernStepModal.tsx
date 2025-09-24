@@ -44,10 +44,16 @@ export function ModernStepModal({
       duration: initialData?.duration || '',
     },
     onSave: (data) => {
+      const durationInMinutes = parseInt(data.duration) || 0;
       onSave({
         step_number: stepNumber,
+        title: '', // Empty title as we're using description
         description: data.description,
-        duration: data.duration,
+        duration: durationInMinutes * 60, // Convert minutes to seconds for duration field
+        total_duration: durationInMinutes, // Store in minutes for display
+        cooking_duration: 0,
+        rest_duration: 0,
+        preparation_duration: durationInMinutes * 60, // Assume all duration is preparation
       });
     },
     onCancel,

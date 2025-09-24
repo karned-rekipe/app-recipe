@@ -29,6 +29,8 @@ export { IngredientDisplay, StepDisplay, TagDisplay, IngredientInlineDisplay } f
 export { IngredientListManager, StepListManager, InlineIngredientListManager } from './SpecializedListManagers';
 export { SimpleTagListManager } from './SimpleTagListManager';
 export { SuperModernRecipeForm } from './SuperModernRecipeForm';
+export { ProcessCard } from './ProcessCard';
+export { RecipeSelectionModal } from './RecipeSelectionModal';
 
 // Hooks personnalisés
 export { useModalForm } from './useModalForm';
@@ -58,4 +60,4 @@ export { StepFormItem } from './StepFormItem';
 // Types
 export type { PriceValue } from './PriceSelector';
 export type { DifficultyValue } from './DifficultySelector';
-export type { RecipeFormData } from './types';
+export type { RecipeFormData, ProcessFormData } from './types';
