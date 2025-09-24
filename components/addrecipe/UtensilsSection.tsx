@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {theme} from '../../constants/theme';
+import {ModernUtensilModal} from '../forms/ModernUtensilModal';
 
 interface UtensilsSectionProps {
     utensils: string[];
@@ -24,19 +25,26 @@ export function UtensilsSection({
     onAddUtensil,
     onRemoveUtensil
 }: UtensilsSectionProps) {
-    
-    const addUtensil = () => {
-        const utensil = prompt("Nom de l'ustensile:");
-        if (utensil && utensil.trim()) {
-            onAddUtensil(utensil.trim());
-        }
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+
+    const handleAddUtensil = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleModalSave = (utensil: string) => {
+        onAddUtensil(utensil);
+        setIsModalVisible(false);
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
     };
 
     return (
         <View style={styles.section}>
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Ustensiles</Text>
-                <TouchableOpacity onPress={addUtensil} style={styles.addButton}>
+                <TouchableOpacity onPress={handleAddUtensil} style={styles.addButton}>
                     <Ionicons name="add" size={20} color={theme.colors.primary}/>
                 </TouchableOpacity>
             </View>
@@ -50,6 +58,13 @@ export function UtensilsSection({
                     </View>
                 </React.Fragment>
             ))}
+            
+            <ModernUtensilModal
+                visible={isModalVisible}
+                mode="add"
+                onSave={handleModalSave}
+                onCancel={handleModalCancel}
+            />
         </View>
     );
 }
