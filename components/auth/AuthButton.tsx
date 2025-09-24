@@ -27,9 +27,17 @@ export function AuthButton({
   fullWidth = true,
   disabled,
   testID,
+  onPress,
   ...touchableOpacityProps 
 }: AuthButtonProps) {
   const isDisabled = disabled || loading;
+  
+  const handlePress = (event: any) => {
+    console.log(`🔘 [AuthButton] Bouton "${title}" pressé`, { disabled: isDisabled, loading });
+    if (!isDisabled && onPress) {
+      onPress(event);
+    }
+  };
   
   return (
     <TouchableOpacity
@@ -44,6 +52,7 @@ export function AuthButton({
       ]}
       disabled={isDisabled}
       activeOpacity={0.85}
+      onPress={handlePress}
     >
       {loading ? (
         <ActivityIndicator 

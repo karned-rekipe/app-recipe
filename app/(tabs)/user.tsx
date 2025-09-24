@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View, Text, Alert, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, ScrollView } from "react-native";
 import { AuthButton } from "../../components/auth/AuthButton";
 import { LicenseInfo } from "../../components/LicenseInfo";
 import { useAuth } from "../../contexts/AuthContext";
@@ -7,25 +7,17 @@ import { router } from "expo-router";
 export default function UserScreen() {
   const { user, signOut } = useAuth();
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Déconnexion",
-      "Êtes-vous sûr de vouloir vous déconnecter ?",
-      [
-        {
-          text: "Annuler",
-          style: "cancel"
-        },
-        {
-          text: "Déconnexion",
-          style: "destructive",
-          onPress: async () => {
-            await signOut();
-            router.replace("/login");
-          }
-        }
-      ]
-    );
+  const handleLogout = async () => {
+    console.log('🔘 [UserScreen] Déconnexion directe démarrée');
+    
+    try {
+      await signOut();
+      console.log('✅ [UserScreen] SignOut terminé, redirection vers login');
+      router.replace("/login");
+      console.log('✅ [UserScreen] Redirection effectuée');
+    } catch (error) {
+      console.error('❌ [UserScreen] Erreur pendant la déconnexion:', error);
+    }
   };
 
   return (

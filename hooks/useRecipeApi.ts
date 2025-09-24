@@ -44,13 +44,13 @@ export function useRecipeApi(): UseRecipeApiReturn {
 
     // Vérifications préalables
     if (!isAuthenticated || !tokens) {
-      console.error('[useRecipeApi] ❌ Utilisateur non authentifié');
+      console.log('[useRecipeApi] ❌ Utilisateur non authentifié');
       setError('Utilisateur non authentifié');
       return;
     }
 
     if (!activeLicense) {
-      console.error('[useRecipeApi] ❌ Aucune licence active trouvée');
+      console.log('[useRecipeApi] ❌ Aucune licence active trouvée');
       setError('Aucune licence active trouvée');
       return;
     }

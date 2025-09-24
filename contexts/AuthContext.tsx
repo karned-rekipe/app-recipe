@@ -132,6 +132,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return { ...state, error: null };
     
     case 'LOGOUT':
+      console.log('🔄 [AuthContext] Reducer LOGOUT - réinitialisation de l\'état');
       return {
         ...initialState,
         isLoading: false,
@@ -266,15 +267,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   // Fonction pour se déconnecter
   const signOut = async (): Promise<void> => {
+    console.log('🚪 [AuthContext] Début de la déconnexion...');
     dispatch({ type: 'SET_LOADING', payload: true });
     
     try {
+      console.log('🔐 [AuthContext] Suppression des tokens du stockage sécurisé...');
       // Supprimer les tokens du stockage sécurisé
       await secureStorageService.clearTokens();
+      console.log('✅ [AuthContext] Tokens supprimés avec succès');
     } catch (error) {
-      console.error('Erreur lors de la suppression des tokens:', error);
+      console.error('❌ [AuthContext] Erreur lors de la suppression des tokens:', error);
     } finally {
+      console.log('🔄 [AuthContext] Dispatch de l\'action LOGOUT...');
       dispatch({ type: 'LOGOUT' });
+      console.log('✅ [AuthContext] Déconnexion terminée');
     }
   };
 

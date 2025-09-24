@@ -135,7 +135,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
               error={fieldErrors.username}
               testID="login-username-input"
             />
-
             <AuthInput
               label=""
               value={credentials.password}
@@ -147,7 +146,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
               error={fieldErrors.password}
               testID="login-password-input"
             />
-
             {error && (
               <View style={styles.errorContainer}>
                 <Text style={styles.errorText} testID="login-error-message">
@@ -155,7 +153,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
                 </Text>
               </View>
             )}
-
             <AuthButton
               title="Se connecter"
               onPress={handleSubmit}
