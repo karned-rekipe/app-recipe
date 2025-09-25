@@ -1,13 +1,17 @@
+import { getEnvironmentConfig } from './environments';
+
+const environmentConfig = getEnvironmentConfig();
+
 const config = {
   // URL de base pour l'authentification
-  AUTH_API_URL: 'http://localhost:9000/auth/v1/',
-  
+  AUTH_API_URL: environmentConfig.AUTH_API_URL,
+
   // URL de base pour les licences
-  LICENSE_API_URL: 'http://localhost:9000/license/v1/',
-  
+  LICENSE_API_URL: environmentConfig.LICENSE_API_URL,
+
   // URL de base pour les recettes
-  RECIPE_API_URL: 'http://localhost:9000/recipe/v1/',
-  
+  RECIPE_API_URL: environmentConfig.RECIPE_API_URL,
+
   // Endpoints d'authentification
   auth: {
     token: 'token',

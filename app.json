@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Rekipe",
-    "slug": "Rekipe",
+    "slug": "app-recipe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -54,7 +54,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "e356b0f8-c76f-4fd6-bdd1-cc6a1d44af39"
+        "projectId": "7207ced0-6749-4f56-83a1-5e0ee18ac4d4"
       }
     },
     "owner": "skit"
