@@ -1,27 +1,27 @@
 const config = {
   // URL de base pour l'authentification
-  AUTH_API_URL: 'http://localhost:9000/auth/v1',
+  AUTH_API_URL: 'http://localhost:9000/auth/v1/',
   
   // URL de base pour les licences
-  LICENSE_API_URL: 'http://localhost:9000/license/v1',
+  LICENSE_API_URL: 'http://localhost:9000/license/v1/',
   
   // URL de base pour les recettes
-  RECIPE_API_URL: 'http://localhost:9000/recipe/v1',
+  RECIPE_API_URL: 'http://localhost:9000/recipe/v1/',
   
   // Endpoints d'authentification
   auth: {
-    token: '/token',
-    refresh: '/renew', // Endpoint séparé pour le refresh
+    token: 'token',
+    refresh: 'renew', // Endpoint séparé pour le refresh
   },
   
   // Endpoints des licences
   license: {
-    mine: '/mine', // Récupérer les licences de l'utilisateur connecté
+    mine: 'mine', // Récupérer les licences de l'utilisateur connecté
   },
   
   // Endpoints des recettes
   recipe: {
-    list: '/', // Récupérer la liste des recettes
+    list: '', // Récupérer la liste des recettes
   },
   
   // Configuration des tokens

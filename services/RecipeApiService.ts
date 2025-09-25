@@ -344,7 +344,7 @@ class RecipeApiService {
       this.validator.validateRecipe(recipe);
 
       // 2. Construction de l'URL et des headers
-      const url = `${config.RECIPE_API_URL}/recipes`;
+      const url = `${config.RECIPE_API_URL}`;
       const headers = this.headersBuilder.buildHeaders(tokens, license);
 
       // 3. Log de la requête
