@@ -9,7 +9,6 @@ export interface Step {
     title: string;
     description: string | null;
     duration: number; // en secondes
-    total_duration: number; // en minutes - durée totale utilisée dans l'affichage
     cooking_duration: number; // en secondes
     rest_duration: number; // en secondes
     preparation_duration: number; // en secondes

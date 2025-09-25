@@ -11,8 +11,11 @@ import { BaseModal } from './BaseModal';
 import { useModalForm } from './useModalForm';
 
 interface StepFormData {
+  title: string;
   description: string;
-  duration: string;
+  cooking_time: string;
+  rest_duration: string;
+  preparation_time: string;
 }
 
 interface ModernStepModalProps {
@@ -40,20 +43,26 @@ export function ModernStepModal({
     handleCancel,
   } = useModalForm<StepFormData>({
     defaultValues: {
+      title: initialData?.title || '',
       description: initialData?.description || '',
-      duration: initialData?.duration || '',
+      cooking_time: initialData?.cooking_duration ? Math.floor(initialData.cooking_duration / 60).toString() : '',
+      rest_duration: initialData?.rest_duration ? Math.floor(initialData.rest_duration / 60).toString() : '',
+      preparation_time: initialData?.preparation_duration ? Math.floor(initialData.preparation_duration / 60).toString() : '',
     },
     onSave: (data) => {
-      const durationInMinutes = parseInt(data.duration) || 0;
+      const cookingTime = parseInt(data.cooking_time) || 0;
+      const restDuration = parseInt(data.rest_duration) || 0;
+      const preparationTime = parseInt(data.preparation_time) || 0;
+      const totalDuration = cookingTime + restDuration + preparationTime;
+      
       onSave({
         step_number: stepNumber,
-        title: '', // Empty title as we're using description
+        title: data.title,
         description: data.description,
-        duration: durationInMinutes * 60, // Convert minutes to seconds for duration field
-        total_duration: durationInMinutes, // Store in minutes for display
-        cooking_duration: 0,
-        rest_duration: 0,
-        preparation_duration: durationInMinutes * 60, // Assume all duration is preparation
+        duration: totalDuration * 60, // Total duration in seconds
+        cooking_duration: cookingTime * 60, // Convert to seconds
+        rest_duration: restDuration * 60, // Convert to seconds
+        preparation_duration: preparationTime * 60, // Convert to seconds
       });
     },
     onCancel,
@@ -69,6 +78,15 @@ export function ModernStepModal({
       saveButtonText={mode === 'edit' ? 'Modifier' : 'Ajouter'}
     >
       <ControlledInput
+        name="title"
+        control={control}
+        label="Titre de l'étape"
+        placeholder="Ex: Préparer la pâte, Cuire au four..."
+        rules={{ required: 'Le titre est requis' }}
+        required
+      />
+
+      <ControlledInput
         name="description"
         control={control}
         label="Description de l'étape"
@@ -76,19 +94,45 @@ export function ModernStepModal({
         multiline
         numberOfLines={4}
         textAlignVertical="top"
-        rules={{ required: 'La description est requise' }}
-        required
       />
 
       <ControlledInput
-        name="duration"
+        name="cooking_time"
         control={control}
-        label="Durée (en minutes)"
+        label="Temps de cuisson (en minutes)"
+        placeholder="20"
+        keyboardType="numeric"
+        rules={{
+          pattern: {
+            value: /^\d*$/,
+            message: 'Veuillez entrer un nombre valide'
+          },
+        }}
+      />
+
+      <ControlledInput
+        name="rest_duration"
+        control={control}
+        label="Temps de repos (en minutes)"
         placeholder="15"
         keyboardType="numeric"
         rules={{
           pattern: {
-            value: /^\d+$/,
+            value: /^\d*$/,
+            message: 'Veuillez entrer un nombre valide'
+          },
+        }}
+      />
+
+      <ControlledInput
+        name="preparation_time"
+        control={control}
+        label="Temps de préparation (en minutes)"
+        placeholder="10"
+        keyboardType="numeric"
+        rules={{
+          pattern: {
+            value: /^\d*$/,
             message: 'Veuillez entrer un nombre valide'
           },
         }}
