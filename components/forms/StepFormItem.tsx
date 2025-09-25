@@ -25,14 +25,14 @@ export function StepFormItem({ step, index, onEdit }: StepFormItemProps) {
 
   const getDurationDisplay = () => {
     const durations = [];
-    if (step.preparation_duration > 0) {
-      durations.push(`Prép: ${formatDuration(step.preparation_duration)}`);
+    if (step.preparation_time > 0) {
+      durations.push(`Prép: ${formatDuration(step.preparation_time)}`);
     }
-    if (step.cooking_duration > 0) {
-      durations.push(`Cuisson: ${formatDuration(step.cooking_duration)}`);
+    if (step.cooking_time > 0) {
+      durations.push(`Cuisson: ${formatDuration(step.cooking_time)}`);
     }
-    if (step.rest_duration > 0) {
-      durations.push(`Repos: ${formatDuration(step.rest_duration)}`);
+    if (step.rest_time > 0) {
+      durations.push(`Repos: ${formatDuration(step.rest_time)}`);
     }
     return durations.join(' • ');
   };
@@ -55,14 +55,6 @@ export function StepFormItem({ step, index, onEdit }: StepFormItemProps) {
         <Text style={styles.description}>
           {step.description}
         </Text>
-        
-        {step.total_duration > 0 && (
-          <View style={styles.durationContainer}>
-            <Text style={styles.totalDurationText}>
-              {formatDuration(step.total_duration)}
-            </Text>
-          </View>
-        )}
 
         {getDurationDisplay() && (
           <View style={styles.detailDurations}>

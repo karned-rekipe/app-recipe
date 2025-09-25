@@ -14,7 +14,7 @@ interface StepFormData {
   title: string;
   description: string;
   cooking_time: string;
-  rest_duration: string;
+  rest_time: string;
   preparation_time: string;
 }
 
@@ -45,13 +45,13 @@ export function ModernStepModal({
     defaultValues: {
       title: initialData?.title || '',
       description: initialData?.description || '',
-      cooking_time: initialData?.cooking_duration ? Math.floor(initialData.cooking_duration / 60).toString() : '',
-      rest_duration: initialData?.rest_duration ? Math.floor(initialData.rest_duration / 60).toString() : '',
-      preparation_time: initialData?.preparation_duration ? Math.floor(initialData.preparation_duration / 60).toString() : '',
+      cooking_time: initialData?.cooking_time ? Math.floor(initialData.cooking_time / 60).toString() : '',
+      rest_time: initialData?.rest_time ? Math.floor(initialData.rest_time / 60).toString() : '',
+      preparation_time: initialData?.preparation_time ? Math.floor(initialData.preparation_time / 60).toString() : '',
     },
     onSave: (data) => {
       const cookingTime = parseInt(data.cooking_time) || 0;
-      const restDuration = parseInt(data.rest_duration) || 0;
+      const restDuration = parseInt(data.rest_time) || 0;
       const preparationTime = parseInt(data.preparation_time) || 0;
       const totalDuration = cookingTime + restDuration + preparationTime;
       
@@ -60,9 +60,9 @@ export function ModernStepModal({
         title: data.title,
         description: data.description,
         duration: totalDuration * 60, // Total duration in seconds
-        cooking_duration: cookingTime * 60, // Convert to seconds
-        rest_duration: restDuration * 60, // Convert to seconds
-        preparation_duration: preparationTime * 60, // Convert to seconds
+        cooking_time: cookingTime * 60, // Convert to seconds
+        rest_time: restDuration * 60, // Convert to seconds
+        preparation_time: preparationTime * 60, // Convert to seconds
       });
     },
     onCancel,
@@ -111,7 +111,7 @@ export function ModernStepModal({
       />
 
       <ControlledInput
-        name="rest_duration"
+        name="rest_time"
         control={control}
         label="Temps de repos (en minutes)"
         placeholder="15"

@@ -9,9 +9,9 @@ export interface Step {
     title: string;
     description: string | null;
     duration: number; // en secondes
-    cooking_duration: number; // en secondes
-    rest_duration: number; // en secondes
-    preparation_duration: number; // en secondes
+    cooking_time: number; // en secondes
+    rest_time: number; // en secondes
+    preparation_time: number; // en secondes
 }
 
 export interface ProcessRecipe {
@@ -45,7 +45,6 @@ export interface LegacyRecipe {
     name: string;
     type: 'entrée' | 'plat' | 'dessert';
     difficulty: 1 | 2 | 3;
-    totalTime: number;
     country: string;
     countryFlag: string;
     image?: string;

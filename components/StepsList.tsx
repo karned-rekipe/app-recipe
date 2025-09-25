@@ -49,14 +49,6 @@ export const StepItem: React.FC<StepItemProps> = ({
         ]}>
           {step.description}
         </Text>
-        {step.total_duration > 0 ? (
-          <Text style={[
-            styles.stepDuration,
-            checked && styles.stepDurationChecked
-          ]}>
-            ⏱️ {step.total_duration} min
-          </Text>
-        ) : null}
       </View>
     </TouchableOpacity>
   );

@@ -56,9 +56,6 @@ export function StepsSection({
                     <View style={styles.listItem}>
                         <Text style={styles.listItemText}>
                             {step.step_number}. {step.title || step.description}
-                            {step.total_duration && step.total_duration > 0 && (
-                                <Text style={styles.timingText}> ({step.total_duration} min)</Text>
-                            )}
                         </Text>
                         <TouchableOpacity onPress={() => onRemoveStep(sIndex)}>
                             <Ionicons name="close" size={16} color={theme.colors.error}/>

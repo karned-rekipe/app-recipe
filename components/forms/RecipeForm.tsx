@@ -70,10 +70,9 @@ export function RecipeForm({ initialData, onSave, onCancel, isLoading = false }:
       step_number: step.step_number,
       title: step.title,
       description: step.description,
-      total_duration: step.total_duration,
-      cooking_duration: step.cooking_duration,
-      rest_duration: step.rest_duration,
-      preparation_duration: step.preparation_duration
+      cooking_time: step.cooking_time,
+      rest_time: step.rest_time,
+      preparation_time: step.preparation_time
     })),
     thumbnail_url: initialData?.thumbnail_url || '',
     large_image_url: initialData?.large_image_url || '',

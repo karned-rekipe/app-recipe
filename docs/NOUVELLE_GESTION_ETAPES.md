@@ -15,20 +15,19 @@ interface Step {
   step_number: number;
   title: string;           // NOUVEAU
   description: string;
-  total_duration: number;  // NOUVEAU - calculé automatiquement
-  cooking_duration: number;     // NOUVEAU
-  rest_duration: number;        // NOUVEAU  
-  preparation_duration: number; // NOUVEAU
+  cooking_time: number;     // NOUVEAU
+  rest_time: number;        // NOUVEAU  
+  preparation_time: number; // NOUVEAU
   created_by: string | null;
 }
 ```
 
 ### Calcul Automatique de la Durée
 
-La `total_duration` est automatiquement calculée comme la somme de :
-- `preparation_duration`
-- `cooking_duration` 
-- `rest_duration`
+La `duration` est automatiquement calculée en API comme la somme de :
+- `preparation_time`
+- `cooking_time` 
+- `rest_time`
 
 ## Composants Créés
 
@@ -59,7 +58,7 @@ Composant contrôlé pour les durées avec React Hook Form.
 
 ```tsx
 <ControlledDurationSelector
-  name="cooking_duration"
+  name="cooking_time"
   control={control}
   label="Cuisson"
   step={5}

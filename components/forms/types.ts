@@ -10,7 +10,7 @@ import { DifficultyValue } from './DifficultySelector';
 export interface ProcessFormData {
   name: string | null;
   recipe_uuid: string | null;
-  utensils: string[];
+  ustensils: string[];
   ingredients: Omit<Ingredient, 'created_by'>[];
   steps: Omit<Step, 'created_by'>[];
 }

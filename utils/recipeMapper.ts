@@ -44,18 +44,6 @@ const getDifficulty = (attributes: string[]): 1 | 2 | 3 => {
   return 2; // Moyen par défaut
 };
 
-// Calcule le temps total basé sur les étapes dans les process
-const calculateTotalTime = (processes: Recipe['process']): number => {
-  // Utilisation de .flatMap() pour aplatir les étapes et .reduce() pour calculer la somme
-  const totalMinutes = processes
-    .flatMap(process => process.steps)
-    .reduce((total, step) => {
-      // Utilise total_duration en minutes depuis la nouvelle interface
-      return total + (step.total_duration || 0);
-    }, 0);
-  
-  return totalMinutes || 30; // Par défaut 30 minutes si pas de durée spécifiée
-};
 
 /**
  * Convertit une recette API vers le format legacy pour compatibilité
@@ -66,7 +54,6 @@ export const mapRecipeToLegacy = (recipe: Recipe): LegacyRecipe => {
     name: recipe.name,
     type: getRecipeType(recipe.attributes),
     difficulty: getDifficulty(recipe.attributes),
-    totalTime: calculateTotalTime(recipe.process),
     country: recipe.origin_country || 'France',
     countryFlag: countryFlags[recipe.origin_country || 'France'] || '🌍',
     image: recipe.thumbnail_url || recipe.large_image_url || undefined,
@@ -123,7 +110,7 @@ export const convertFormDataToProcesses = (formData: {
   steps: any[]
 }) => {
   // Pour simplifier, on crée un seul processus avec toutes les données
-  // Cette logique peut être étendue pour gérer plusieurs processus si nécessaire
+  // Cette logique peut être étendue pour gérer plusieurs processus si nécessaire.
   return [{
     name: "Processus principal",
     recipe_uuid: null,

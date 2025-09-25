@@ -75,81 +75,81 @@ export const sampleRecipes: Recipe[] = [
                         "description": "Faire bouillir de l'eau et cuire la morue pendant environ 5 minutes. La retirer ensuite et la laisser refroidir.",
                         "duration": 300,
                         "title": "bouillir l'eau",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 2,
                         "description": "Eplucher et couper les pommes de terre en fines tranches. Les faire cuire à l'eau bouillante salée jusqu'à ce qu'elles soient tendres.",
                         "duration": 900,
                         "title": "preparation pomme de terre",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 3,
                         "description": "Eplucher et hacher les oignons. Hacher également l'ail.",
                         "duration": 300,
                         "title": "preparation oignon et ail",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 4,
                         "description": "Faire chauffer l'huile d'olive dans une grande poêle. Ajouter les oignons et l'ail et faire revenir jusqu'à ce qu'ils soient translucides.",
                         "duration": 300,
                         "title": "faire revenir oignon et ail",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 5,
                         "description": "Déchiqueter la morue cuite en morceaux. L'ajouter à la poêle avec les oignons et l'ail.",
                         "duration": 120,
                         "title": "ajouter morue",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 6,
                         "description": "Ajouter les pommes de terre cuites à la poêle. Bien mélanger.",
                         "duration": 120,
                         "title": "1ajouter pomme de terre",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 7,
                         "description": "Casser les oeufs dans un bol et battre légèrement. Verser les oeufs battus sur le mélange de poisson et de pommes de terre.",
                         "duration": 120,
                         "title": "battre les oeufs",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 8,
                         "description": "Cuire à feu doux pendant environ 5 minutes, en remuant délicatement, jusqu'à ce que les oeufs soient cuits. Saler et poivrer selon le goût.",
                         "duration": 300,
                         "title": "cuire a feu doux",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     },
                     {
                         "step_number": 9,
                         "description": "Saupoudrer de persil frais haché avant de servir.",
                         "duration": 60,
                         "title": "ajouter persil",
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                     }
                 ]
             }
@@ -266,54 +266,54 @@ export const sampleRecipes: Recipe[] = [
                         "step_number": 1,
                         "description": "Dans un bol, mélanger le poulet avec le yaourt grec, le jus de citron, le gingembre râpé, l'ail haché, le curcuma, le paprika, le cumin et le poivre noir. Saler.",
                         "duration": 900,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                         "title": "mariner le poulet"
                     },
                     {
                         "step_number": 2,
                         "description": "Laisser mariner au réfrigérateur pendant au moins 30 minutes.",
                         "duration": 1800,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                         "title": "laisser mariner"
                     },
                     {
                         "step_number": 3,
                         "description": "Chauffer l'huile végétale dans une poêle à feu moyen-vif. Faire cuire le poulet mariné pendant environ 5 minutes de chaque côté, jusqu'à ce qu'il soit doré et cuit.",
                         "duration": 600,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                         "title": "cuire le poulet"
                     },
                     {
                         "step_number": 4,
                         "description": "Retirer le poulet de la poêle et mettre de côté. Ajouter les oignons hachés dans la même poêle et faire revenir jusqu'à ce qu'ils soient ramollis.",
                         "duration": 300,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                         "title": "faire revenir les oignons"
                     },
                     {
                         "step_number": 5,
                         "description": "Ajouter la pâte de tomates à la poêle et cuire pendant 2-3 minutes, en remuant constamment. Ajouter ensuite la crème fraîche épaisse, le sel et le poivre noir.",
                         "duration": 300,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes
                         "title": "préparer la sauce"
                     },
                     {
                         "step_number": 6,
                         "description": "Remettre le poulet dans la sauce et laisser mijoter pendant 5-10 minutes, jusqu'à ce que la sauce ait épaissi. Garnir de coriandre fraîche hachée avant de servir.",
                         "duration": 900,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     }
                 ]
@@ -382,45 +382,45 @@ export const sampleRecipes: Recipe[] = [
                         "step_number": 1,
                         "description": "Faire bouillir les œufs dans de l'eau pendant environ 8 minutes.",
                         "duration": 480,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 2,
                         "description": "Égoutter les œufs et les plonger dans de l'eau froide pour arrêter la cuisson.",
                         "duration": 0,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 3,
                         "description": "Éplucher les œufs durs et les écraser grossièrement dans un bol.",
                         "duration": 0,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 4,
                         "description": "Ajouter la mayonnaise, la moutarde de Dijon, la ciboulette hachée, le sel et le poivre noir. Mélanger jusqu'à ce que tous les ingrédients soient bien combinés.",
                         "duration": 0,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 5,
                         "description": "Couvrir et réfrigérer pendant au moins 30 minutes avant de servir.",
                         "duration": 1800,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     }
                 ]
@@ -523,27 +523,27 @@ export const sampleRecipes: Recipe[] = [
                         "step_number": 1,
                         "description": "pétrir la pâte",
                         "duration": 120,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 2,
                         "description": "faire pousser la pâte",
                         "duration": 1200,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 3,
                         "description": "dégazer et faire les pâtons",
                         "duration": 300,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     }
                 ]
@@ -604,27 +604,27 @@ export const sampleRecipes: Recipe[] = [
                         "step_number": 1,
                         "description": "étaler la sauce tomate",
                         "duration": 60,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 2,
                         "description": "répartir les ingrédients (sauf le fromage)",
                         "duration": 30,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     },
                     {
                         "step_number": 3,
                         "description": "saupoudrer de fromage",
                         "duration": 30,
-                        "cooking_duration": 0, // en secondes
-                        "rest_duration": 0, // en secondes
-                        "preparation_duration": 0, // en secondes,
+                        "cooking_time": 0, // en secondes
+                        "rest_time": 0, // en secondes
+                        "preparation_time": 0, // en secondes,
                         "title": "mijoter le poulet"
                     }
                 ]

@@ -23,20 +23,18 @@ const sampleRecipe = {
       step_number: 1, 
       title: 'Préparation', 
       description: 'Mélanger les ingrédients secs',
-      total_duration: 10,
-      preparation_duration: 10,
-      cooking_duration: 0,
-      rest_duration: 0,
+      preparation_time: 10,
+      cooking_time: 0,
+      rest_time: 0,
       created_by: '1'
     },
     { 
       step_number: 2, 
       title: 'Cuisson', 
       description: 'Faire cuire au four',
-      total_duration: 30,
-      cooking_duration: 30,
-      preparation_duration: 0,
-      rest_duration: 0,
+      cooking_time: 30,
+      preparation_time: 0,
+      rest_time: 0,
       created_by: '1'
     }
   ]

@@ -65,10 +65,9 @@ export function SuperModernRecipeForm({initialData, onSave, onCancel, isLoading 
             step_number: step.step_number,
             title: step.title || '',
             description: step.description,
-            total_duration: step.total_duration || 0,
-            cooking_duration: step.cooking_duration || 0,
-            rest_duration: step.rest_duration || 0,
-            preparation_duration: step.preparation_duration || 0,
+            cooking_time: step.cooking_time || 0,
+            rest_time: step.rest_time || 0,
+            preparation_time: step.preparation_time || 0,
         }))
     })) : [{
         name: null,
